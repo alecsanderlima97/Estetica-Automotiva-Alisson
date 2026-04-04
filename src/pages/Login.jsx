@@ -18,18 +18,18 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     
     // Simulação de autenticação com senha local
-    const savedPass = localStorage.getItem('valen_admin_pass') || 'admin';
+    const savedPass = localStorage.getItem('alisson_admin_pass') || 'admin';
     
     setTimeout(() => {
       if (password === savedPass) {
-        // Toca o som tenebroso de violino
+        // Toca o som de entrada
         playLoginSound().catch(e => console.log("Erro ao tocar som:", e));
         
-        // Aguarda a nota crescente (aprox 3.5 segundos) antes de entrar de fato
+        // Aguarda animação antes de entrar
         setTimeout(() => {
-          onLogin({ name: 'Melissa Dimas', role: 'admin' });
+          onLogin({ name: 'Alisson Detailing', role: 'admin' });
           setLoading(false);
-        }, 3500);
+        }, 1500);
       } else {
         alert('Senha incorreta! (Dica padrão: admin)');
         setLoading(false);
@@ -72,8 +72,8 @@ const Login = ({ onLogin }) => {
           <Lock size={32} />
         </div>
 
-        <h1 style={{ color: 'var(--text-light)', fontSize: '24px', marginBottom: '8px' }}>Bem-vindo de volta</h1>
-        <p style={{ color: '#888', fontSize: '14px', marginBottom: '32px' }}>Acesse sua conta no Studio VALEN</p>
+        <h1 style={{ color: 'var(--text-light)', fontSize: '24px', marginBottom: '8px', fontFamily: 'Oswald', textTransform: 'uppercase' }}>Sistema de Gestão</h1>
+        <p style={{ color: '#888', fontSize: '14px', marginBottom: '32px' }}>Acesse sua conta na Estética Automotiva Alisson</p>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px', textAlign: 'left' }}>

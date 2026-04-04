@@ -35,7 +35,7 @@ const Settings = () => {
       return;
     }
     // Em um sistema real, aqui salvaríamos no banco. Aqui simulamos salvando no localStorage.
-    localStorage.setItem('valen_admin_pass', newPassword);
+    localStorage.setItem('alisson_admin_pass', newPassword);
     alert('Senha alterada com sucesso!');
     setNewPassword('');
     setConfirmPassword('');
@@ -72,7 +72,7 @@ const Settings = () => {
         <div className="card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <UserIcon size={24} color="var(--primary-color)" />
-            <h2 style={{ margin: 0, fontSize: '20px' }}>Perfil Administrador</h2>
+            <h2 style={{ margin: 0, fontSize: '20px' }}>Perfil do Usuário</h2>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginBottom: '24px' }}>
@@ -89,7 +89,7 @@ const Settings = () => {
                 border: '2px solid var(--primary-color)'
               }}>
                 {userProfile.foto ? (
-                  <img src={userProfile.foto} alt="Melissa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={userProfile.foto} alt="Alisson" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   <UserIcon size={40} color="#888" />
                 )}
@@ -110,7 +110,7 @@ const Settings = () => {
             </div>
 
             <div style={{ width: '100%' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '6px' }}>Nome da Administradora</label>
+              <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '6px' }}>Nome do Proprietário</label>
               <input 
                 type="text" 
                 name="nome" 

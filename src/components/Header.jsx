@@ -19,7 +19,7 @@ const Header = () => {
 
   const handleLogout = () => {
     if (window.confirm('Tem certeza que deseja sair?')) {
-      localStorage.removeItem('valenUser');
+      localStorage.removeItem('alissonUser');
       window.location.reload();
     }
   };
@@ -85,7 +85,7 @@ const Header = () => {
           {/* Foguetinho ✨ */}
           <Rocket size={28} color="var(--primary-color)" fill="rgba(59, 130, 246, 0.2)" />
         </div>
-        ESTÉTICA AUTOMOTIVA
+        ALISSON ESTÉTICA
       </div>
 
       <div className="header-user-group" onClick={() => setMenuOpen(!menuOpen)}>

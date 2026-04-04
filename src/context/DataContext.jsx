@@ -166,31 +166,37 @@ export const DataProvider = ({ children }) => {
 
   const exportData = () => {
     const data = {
-      valen_servicos: servicos,
-      valen_clientes: clientes,
-      valen_agendamentos: agendamentos,
-      valen_estoque: estoque,
-      valen_financeiro: financeiro
+      alisson_servicos: servicos,
+      alisson_clientes: clientes,
+      alisson_agendamentos: agendamentos,
+      alisson_estoque: estoque,
+      alisson_financeiro: financeiro
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `backup_valen_studio_${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `backup_alisson_estetica_${new Date().toISOString().split('T')[0]}.json`;
     link.click();
   };
 
   const importData = (jsonData) => {
     try {
+      if (jsonData.alisson_servicos) setServicos(jsonData.alisson_servicos);
+      if (jsonData.alisson_clientes) setClientes(jsonData.alisson_clientes);
+      if (jsonData.alisson_agendamentos) setAgendamentos(jsonData.alisson_agendamentos);
+      if (jsonData.alisson_estoque) setEstoque(jsonData.alisson_estoque);
+      if (jsonData.alisson_financeiro) setFinanceiro(jsonData.alisson_financeiro);
+      alert('Dados restaurados com sucesso!');
+      window.location.reload();
+    } catch (e) {
       if (jsonData.valen_servicos) setServicos(jsonData.valen_servicos);
       if (jsonData.valen_clientes) setClientes(jsonData.valen_clientes);
       if (jsonData.valen_agendamentos) setAgendamentos(jsonData.valen_agendamentos);
       if (jsonData.valen_estoque) setEstoque(jsonData.valen_estoque);
       if (jsonData.valen_financeiro) setFinanceiro(jsonData.valen_financeiro);
-      alert('Dados restaurados com sucesso!');
+      alert('Dados restaurados (legados) com sucesso!');
       window.location.reload();
-    } catch (e) {
-      alert('Erro ao importar dados. Verifique o arquivo.');
     }
   };
 
