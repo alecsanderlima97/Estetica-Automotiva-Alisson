@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>RECUPEAÇÃO DE DADOS - STUDIO VALEN</title>
+    <style>
+        body { font-family: sans-serif; background: #1a202c; color: white; padding: 20px; }
+        .box { background: #2d3748; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #48bb78; }
+        pre { background: #000; padding: 10px; overflow: auto; max-height: 300px; color: #0f0; }
+        button { background: #48bb78; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Resgate de Dados LocalStorage</h1>
+    <p>Esta página lê diretamente o que está salvo no seu navegador para esta porta.</p>
+    
+    <div id="results"></div>
+
+    <script>
+        function checkStorage() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+            
+            if (localStorage.length === 0) {
+                results.innerHTML = '<div class="box" style="border-color: red;">Nenhum dado encontrado neste endereço (localStorage vazio).</div>';
+                return;
+            }
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                
+                const div = document.createElement('div');
+                div.className = 'box';
+                div.innerHTML = `
+                    <h3>Chave: ${key}</h3>
+                    <pre>${value}</pre>
+                `;
+                results.appendChild(div);
+            }
+        }
+        
+        function downloadAll() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                data[key] = localStorage.getItem(key);
+            }
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'backup_emergencia_valen.json';
+            a.click();
+        }
+
+        checkStorage();
+    </script>
+    <button onclick="downloadAll()">BAIXAR TUDO ATUAL</button>
+    <button onclick="checkStorage()">ATUALIZAR</button>
+</body>
+</html>

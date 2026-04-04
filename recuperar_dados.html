@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperação de Dados - Valen Studio</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1d14; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; text-align: center; }
+        h1 { color: #a3b88e; margin-bottom: 20px; }
+        p { color: #aaa; line-height: 1.6; }
+        button { background: #a3b88e; color: #1a1d14; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 20px; transition: 0.3s; }
+        button:hover { background: #b4c99f; }
+        #status { margin-top: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Resgate de Dados ✨</h1>
+        <p>Esta ferramenta vai extrair os dados da Melissa que estão salvos neste navegador e gerar o arquivo de backup para você levar para o Vercel.</p>
+        
+        <button onclick="exportarBackup()">Baixar Arquivo de Backup (.json)</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        function exportarBackup() {
+            const keys = [
+                'valen_servicos',
+                'valen_clientes',
+                'valen_agendamentos',
+                'valen_estoque',
+                'valen_financeiro',
+                'valenUser'
+            ];
+            
+            const backup = {};
+            let encontrouAlgo = false;
+
+            keys.forEach(key => {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    backup[key] = JSON.parse(data);
+                    encontrouAlgo = true;
+                }
+            });
+
+            if (!encontrouAlgo) {
+                document.getElementById('status').innerText = "❌ Nenhum dado encontrado neste navegador. Certifique-se de estar usando o navegador onde o sistema funcionava.";
+                document.getElementById('status').style.color = "#ff6b6b";
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_emergencial_valen_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            document.getElementById('status').innerText = "✅ Backup gerado com sucesso! Agora leve este arquivo para o Vercel.";
+            document.getElementById('status').style.color = "#4ade80";
+        }
+    </script>
+</body>
+</html>
