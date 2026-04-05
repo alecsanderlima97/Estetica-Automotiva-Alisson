@@ -24,13 +24,13 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="brand-title" style={{ fontFamily: 'Oswald, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'left' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0px', opacity: 0.9 }}>
-          <span style={{ color: '#3b82f6', fontWeight: '900', fontSize: '24px', lineHeight: '1.2' }}>Alisson</span>
-          <span style={{ color: 'rgba(255, 255, 255, 0.95)', fontWeight: 'bold', fontSize: '14px', marginTop: '-4px' }}>Estética Automotiva</span>
+      <div className="brand-title" style={{ fontFamily: 'sans-serif', textTransform: 'none', letterSpacing: 'normal', textAlign: 'left' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', opacity: 0.8, filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.2))' }}>
+          <span style={{ color: '#3b82f6', fontWeight: '900', fontSize: '36px', letterSpacing: '-1px' }}>O</span>
+          <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold', fontSize: '22px', letterSpacing: '0.5px' }}>rquestra.cs</span>
         </div>
-        <div style={{ fontSize: '9px', color: '#666', marginTop: '2px', fontWeight: '800', textTransform: 'uppercase', opacity: 0.7 }}>
-          Detailing & Performance
+        <div style={{ fontSize: '10px', color: '#666', marginTop: '-4px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          Sinfonia em Software
         </div>
       </div>
       
