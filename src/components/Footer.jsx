@@ -7,7 +7,7 @@ const Footer = () => {
   // Informações da Empresa Desenvolvedora (Orquestra.cs)
   const devInfo = {
     company: "Orquestra.cs",
-    fullName: "Orquestra.cs - sistemas personalizados",
+    fullName: "Orquestra.cs - Desenvolvimento de Software de Alta Performance",
     instagram: "https://www.instagram.com/Orquestra.cs",
     whatsapp: "https://wa.me/5515998478705",
     supportText: "Olá! Gostaria de suporte técnico para Alisson Estética Automotiva."
@@ -19,7 +19,7 @@ const Footer = () => {
         <div className="footer-top">
           <div className="footer-brand">
             <span className="footer-logo">Alisson Estética Automotiva</span>
-            <p className="footer-motto">sistemas personalizados por {devInfo.company}</p>
+            <p className="footer-motto">A sinfonia perfeita entre código e inovação.</p>
           </div>
           
           <div className="footer-links-group">
@@ -54,7 +54,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-watermark">
-        Desenvolvido com <Heart size={10} style={{ color: '#ef4444', verticalAlign: 'middle' }} /> por <strong>{devInfo.fullName}</strong>
+        Orquestrando Inovação: Onde o Código se Torna Harmonia — <strong>{devInfo.company}</strong>
       </div>
     </footer>
   );
