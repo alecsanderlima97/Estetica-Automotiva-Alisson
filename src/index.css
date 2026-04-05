@@ -544,7 +544,7 @@ body {
 /* Configurações de Impressão (PDF) */
 @media print {
   /* Esconde elementos desnecessários */
-  .sidebar, .action-btn, button, .pulsing-logo, .sakura, .bg-decor, .page-header p, .calendar-day {
+  .sidebar, .action-btn, button, .pulsing-logo, .sakura, .bg-decor, .page-header p, .calendar-day, .mobile-menu-btn {
     display: none !important;
   }
   

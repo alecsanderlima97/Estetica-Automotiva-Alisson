@@ -111,30 +111,30 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
                 height: auto !important;
                 overflow: visible !important;
               }
-              #root, .no-print, header, nav, aside { 
+              .no-print, header, nav, aside, .sidebar { 
                 display: none !important; 
               }
               #printable-relatorio { 
                 display: block !important;
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
+                position: relative !important;
                 width: 100% !important;
-                padding: 0 !important;
+                padding: 20px !important;
                 margin: 0 !important;
                 box-shadow: none !important;
                 border: none !important;
-                height: auto !important;
-                overflow: visible !important;
+                background: white !important;
+                color: black !important;
                 visibility: visible !important;
               }
-              * { visibility: hidden; }
-              #printable-relatorio, #printable-relatorio * { visibility: visible; }
+              body * {
+                visibility: hidden;
+              }
+              #printable-relatorio, #printable-relatorio * {
+                visibility: visible !important;
+              }
               
-              /* Tabelas no relatório financeiro precisam manter o layout */
-              table { display: table !important; width: 100% !important; }
-              tr { display: table-row !important; }
-              td, th { display: table-cell !important; }
+              /* Garante que o modal não tenha scroll ou fundos escuros */
+              .card { background: white !important; color: black !important; border: none !important; }
             }
           `}
         </style>
