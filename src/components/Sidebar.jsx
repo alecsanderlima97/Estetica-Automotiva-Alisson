@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
           <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold', fontSize: '22px', letterSpacing: '0.5px' }}>rquestra.cs</span>
         </div>
         <div style={{ fontSize: '10px', color: '#666', marginTop: '-4px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          Sinfonia em Software
+          SISTEMAS PERSONALIZADOS
         </div>
       </div>
       
