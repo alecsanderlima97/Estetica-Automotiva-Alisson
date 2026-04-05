@@ -79,7 +79,7 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
           </table>
 
           {/* Resumo Financeiro Final */}
-          <div style={{ background: '#111', color: 'white', padding: '40px', borderRadius: '12px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+          <div className="summary-box" style={{ background: '#111', color: 'white', padding: '40px', borderRadius: '12px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
             <div style={{ textAlign: 'center', borderRight: '1px solid rgba(255,255,255,0.1)' }}>
               <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#888', textTransform: 'uppercase' }}>Total Receitas</p>
               <h4 style={{ margin: 0, fontSize: '22px', color: '#10b981' }}>R$ {resumo.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h4>
@@ -133,6 +133,24 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
                 visibility: visible !important;
               }
               
+              /* Ajuste do resumo para impressão */
+              .summary-box {
+                background: #f8f9fa !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+                padding: 20px !important;
+              }
+              .summary-box div {
+                border-right: 1px solid #ddd !important;
+              }
+              .summary-box p {
+                color: #555 !important;
+                font-weight: bold !important;
+              }
+              .summary-box h4 {
+                font-size: 20px !important;
+              }
+
               /* Garante que o modal não tenha scroll ou fundos escuros */
               .card { background: white !important; color: black !important; border: none !important; }
             }
