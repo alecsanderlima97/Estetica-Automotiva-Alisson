@@ -7,6 +7,7 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
     preco: '', // Valor base (geralmente Pequeno)
     descricao: '',
     tempoEstimado: '', // em horas
+    categoria: 'LAVAGEM',
     categorias: [
       { nome: 'Médio', valor: '' },
       { nome: 'Grande / SUV', valor: '' }
@@ -34,6 +35,7 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
           preco: servicoParaEditar.preco.toString(),
           descricao: servicoParaEditar.descricao || '',
           tempoEstimado: servicoParaEditar.tempoEstimado?.toString() || '',
+          categoria: servicoParaEditar.categoria || 'LAVAGEM',
           categorias: categoriasPadrao
         });
       } else {
@@ -42,6 +44,7 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
           preco: '',
           descricao: '',
           tempoEstimado: '',
+          categoria: 'LAVAGEM',
           categorias: [
             { nome: 'Médio', valor: '' },
             { nome: 'Grande / SUV', valor: '' }
@@ -74,6 +77,7 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
       preco: parseFloat(formData.preco),
       descricao: formData.descricao,
       tempoEstimado: formData.tempoEstimado || '2h',
+      categoria: formData.categoria,
       categorias: categoriasFinal
     });
   };
@@ -141,6 +145,27 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
                   style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }}
                 />
               </div>
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Categoria do Procedimento</label>
+            <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '10px' }}>
+              <Layers size={18} color="#888" style={{ marginRight: '10px' }} />
+              <select 
+                value={formData.categoria}
+                onChange={(e) => setFormData({...formData, categoria: e.target.value})}
+                style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none', cursor: 'pointer' }}
+              >
+                <option value="LAVAGEM" style={{ background: '#222' }}>LAVAGEM</option>
+                <option value="ESTÉTICA" style={{ background: '#222' }}>ESTÉTICA</option>
+                <option value="PINTURA" style={{ background: '#222' }}>PINTURA</option>
+                <option value="INTERIOR" style={{ background: '#222' }}>INTERIOR</option>
+                <option value="MOTOR" style={{ background: '#222' }}>MOTOR</option>
+                <option value="VIDROS" style={{ background: '#222' }}>VIDROS</option>
+                <option value="MOTOS" style={{ background: '#222' }}>MOTOS</option>
+                <option value="ACESSÓRIOS" style={{ background: '#222' }}>ACESSÓRIOS</option>
+              </select>
             </div>
           </div>
 

@@ -27,12 +27,11 @@ export const DataProvider = ({ children }) => {
       console.error(`Erro ao carregar ${key}`, e);
       return defaultValue;
     }
-  };
-
-  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_final', [
+  };  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_final', [
     { 
       id: 1, 
       nome: 'Limpeza Técnica', 
+      categoria: 'ESTÉTICA',
       preco: 150, 
       tempoEstimado: '3h', 
       descricao: 'Limpeza interna e externa detalhada, com aplicação de selante nos pneus, proteção nos plásticos internos, proteção nas caixas de rodas e selante na pintura.',
@@ -41,6 +40,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 2, 
       nome: 'Limpeza Detalhada', 
+      categoria: 'ESTÉTICA',
       preco: 250, 
       tempoEstimado: '5h', 
       descricao: 'Limpeza interna e externa minuciosa com detalhamento em emblemas, maçanetas e retrovisores. Inclui proteção em caixas de rodas, selante nos pneus e proteção de pintura com enceramento à máquina. Realizamos descontaminação de plásticos, bancos e estofados, revitalização de plásticos internos e externos. Brindes: lixo car + 1 aromatizante personalizado.',
@@ -49,6 +49,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 3, 
       nome: 'Limpeza Completa Detalhada (Motor + Chassi)', 
+      categoria: 'MOTOR',
       preco: 300, 
       tempoEstimado: '6h', 
       descricao: 'Incluso limpeza detalhada de motor e chassi, com aplicação de proteção técnica contra oxidação e ferrugem.',
@@ -57,6 +58,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 4, 
       nome: 'Higienização Completa', 
+      categoria: 'INTERIOR',
       preco: 800, 
       tempoEstimado: '8h', 
       descricao: 'Remoção técnica de bancos, carpetes e borrachas. Incluso troca do filtro de ar-condicionado, limpeza profunda e acabamento com proteção interna e externa + brindes exclusivos.',
@@ -65,6 +67,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 5, 
       nome: 'Limpeza de Ar-condicionado', 
+      categoria: 'INTERIOR',
       preco: 150, 
       tempoEstimado: '1h', 
       descricao: 'Limpeza técnica do sistema com substituição do filtro e aplicação de granada higienizadora.',
@@ -73,6 +76,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 6, 
       nome: 'Restauração de Faróis', 
+      categoria: 'PINTURA',
       preco: 260, 
       tempoEstimado: '2h', 
       descricao: 'Incluso lixamento técnico à máquina e aplicação de proteção em polímero contra raios solares UV. Durabilidade com garantia de 2 anos.',
@@ -81,6 +85,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 7, 
       nome: 'Higienização de Bancos Avulsos', 
+      categoria: 'INTERIOR',
       preco: 300, 
       tempoEstimado: '3h', 
       descricao: 'Processo de higienização profunda para bancos em estofados ou tecidos.',
@@ -89,6 +94,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 8, 
       nome: 'Limpeza Externa com Proteção', 
+      categoria: 'LAVAGEM',
       preco: 80, 
       tempoEstimado: '1h', 
       descricao: 'Lavagem externa com proteção na pintura, aplicação de selante nos pneus e limpeza técnica dos tapetes.',
@@ -97,6 +103,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 9, 
       nome: 'Instalação de Som Automotivo', 
+      categoria: 'ACESSÓRIOS',
       preco: 0, 
       tempoEstimado: '---', 
       descricao: 'Instalação profissional de sistemas de som. Favor levar o veículo até a loja para a realização do orçamento.',
@@ -105,6 +112,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 10, 
       nome: 'Polimento Técnico', 
+      categoria: 'PINTURA',
       preco: 800, 
       tempoEstimado: '10h', 
       descricao: 'Polimento técnico na pintura com limpeza interna e externa completa. Inclui proteção em todas as superfícies do veículo e brinde personalizado.',
@@ -113,6 +121,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 11, 
       nome: 'Polimento Comercial', 
+      categoria: 'PINTURA',
       preco: 500, 
       tempoEstimado: '6h', 
       descricao: 'Focado na remoção de riscos superficiais e restauração do brilho no verniz. Acompanha limpeza externa detalhada.',
@@ -121,6 +130,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 12, 
       nome: 'Polimento em Motos', 
+      categoria: 'MOTOS',
       preco: 300, 
       tempoEstimado: '4h', 
       descricao: 'Incluso limpeza técnica detalhada, proteção nos plásticos, selante nos pneus e limpeza técnica do kit relação.',
@@ -129,6 +139,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 13, 
       nome: 'Vitrificação de Pintura (Carro ou Moto)', 
+      categoria: 'PINTURA',
       preco: 1000, 
       tempoEstimado: '12h', 
       descricao: 'Proteção de alta performance com garantia de 3 anos. (Moto: R$ 500,00 | Carro: R$ 1.000,00).',
@@ -137,6 +148,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 14, 
       nome: 'Limpeza Técnica de Motos', 
+      categoria: 'MOTOS',
       preco: 130, 
       tempoEstimado: '2h', 
       descricao: 'Proteção com verniz de motor, selante na pintura e nos pneus, revitalização de plásticos + brinde.',
@@ -145,6 +157,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 15, 
       nome: 'Limpeza Detalhada de Motos', 
+      categoria: 'MOTOS',
       preco: 220, 
       tempoEstimado: '4h', 
       descricao: 'Detalhamento das relações e remoção das carenagens para maior acesso à limpeza. Inclui proteção nos pneus, pintura e motor com verniz contra oxidação, além de revitalização de plásticos.',
@@ -153,6 +166,7 @@ export const DataProvider = ({ children }) => {
     { 
       id: 16, 
       nome: 'Remoção de Chuva Ácida nos Vidros', 
+      categoria: 'VIDROS',
       preco: 100, 
       tempoEstimado: '2h', 
       descricao: 'Tratamento nos vidros para garantir a maior visibilidade possível e segurança ao dirigir.',
@@ -192,6 +206,34 @@ export const DataProvider = ({ children }) => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('alisson_theme', theme);
   }, [theme]);
+
+  // Efeito para migrar/corrigir categorias nos serviços salvos
+  useEffect(() => {
+    const precisaAjustar = servicos.some(s => !s.categoria || (s.nome === 'Limpeza Técnica' && s.categoria === 'MOTOR'));
+    
+    if (precisaAjustar) {
+      setServicos(prev => prev.map(s => {
+        let novaCat = s.categoria;
+        
+        // Correção específica solicitada pelo usuário
+        if (s.nome === 'Limpeza Técnica' && (!s.categoria || s.categoria === 'MOTOR')) {
+          novaCat = 'ESTÉTICA';
+        } 
+        // Preenchimento de categorias faltantes baseado no nome (heurística para dados antigos)
+        else if (!s.categoria) {
+          if (s.nome.toLowerCase().includes('polimento') || s.nome.toLowerCase().includes('vitrificação')) novaCat = 'PINTURA';
+          else if (s.nome.toLowerCase().includes('lavagem') || s.nome.toLowerCase().includes('detalhada')) novaCat = 'LAVAGEM';
+          else if (s.nome.toLowerCase().includes('higienização') || s.nome.toLowerCase().includes('couro') || s.nome.toLowerCase().includes('ar-condicionado')) novaCat = 'INTERIOR';
+          else if (s.nome.toLowerCase().includes('moto')) novaCat = 'MOTOS';
+          else if (s.nome.toLowerCase().includes('chuva ácida')) novaCat = 'VIDROS';
+          else if (s.nome.toLowerCase().includes('som') || s.nome.toLowerCase().includes('film')) novaCat = 'ACESSÓRIOS';
+          else novaCat = 'ESTÉTICA';
+        }
+        
+        return { ...s, categoria: novaCat };
+      }));
+    }
+  }, [servicos]);
 
   // Efeito para salvar no localStorage
   useEffect(() => {

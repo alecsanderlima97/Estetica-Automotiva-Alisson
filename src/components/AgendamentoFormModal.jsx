@@ -185,7 +185,13 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
                 <select name="servicoId" value={formData.servicoId} onChange={handleChange} required
                   style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none', cursor: 'pointer' }}>
                   <option value="" style={{ background: '#111' }}>O que será feito?</option>
-                  {servicos.map(s => <option key={s.id} value={s.id} style={{ background: '#111' }}>{s.nome}</option>)}
+                  {[...new Set(servicos.map(s => s.categoria || 'LAVAGEM'))].map(cat => (
+                    <optgroup key={cat} label={cat} style={{ background: '#222', color: 'var(--primary-color)' }}>
+                      {servicos.filter(s => (s.categoria || 'LAVAGEM') === cat).map(s => (
+                        <option key={s.id} value={s.id} style={{ background: '#111', color: 'white' }}>{s.nome}</option>
+                      ))}
+                    </optgroup>
+                  ))}
                 </select>
               </div>
             </div>

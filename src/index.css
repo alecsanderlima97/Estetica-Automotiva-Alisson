@@ -775,3 +775,41 @@ body {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   CLASSES DE CATEGORIAS DE SERVIÇOS (AESTHETICS)
+   ========================================================================== */
+
+.card-lavagem { border-top: 4px solid #3b82f6 !important; }
+.card-estetica { border-top: 4px solid #8b5cf6 !important; }
+.card-pintura { border-top: 4px solid #f59e0b !important; }
+.card-interior { border-top: 4px solid #10b981 !important; }
+.card-motor { border-top: 4px solid #ef4444 !important; }
+.card-vidros { border-top: 4px solid #06b6d4 !important; }
+.card-motos { border-top: 4px solid #f43f5e !important; }
+.card-acessorios { border-top: 4px solid #64748b !important; }
+
+/* Efeitos de Hover Premium baseados na cor da categoria */
+.card-lavagem:hover { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2) !important; background: rgba(59, 130, 246, 0.05) !important; }
+.card-estetica:hover { box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2) !important; background: rgba(139, 92, 246, 0.05) !important; }
+.card-pintura:hover { box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2) !important; background: rgba(245, 158, 11, 0.05) !important; }
+.card-interior:hover { box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2) !important; background: rgba(16, 185, 129, 0.05) !important; }
+.card-motor:hover { box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2) !important; background: rgba(239, 68, 68, 0.05) !important; }
+.card-vidros:hover { box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2) !important; background: rgba(6, 182, 212, 0.05) !important; }
+.card-motos:hover { box-shadow: 0 10px 25px rgba(244, 63, 94, 0.2) !important; background: rgba(244, 63, 94, 0.05) !important; }
+.card-acessorios:hover { box-shadow: 0 10px 25px rgba(100, 116, 139, 0.2) !important; background: rgba(100, 116, 139, 0.05) !important; }
+
+/* Labels de Categoria Premium */
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
