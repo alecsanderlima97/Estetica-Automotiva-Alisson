@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar, Clock, User, BookOpen, QrCode, Copy, CheckCircle, Car, AlertCircle, Search, DollarSign } from 'lucide-react';
+import { capitalize } from '../utils/masks';
 
 const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, agendamentos, agendamentoParaEditar }) => {
   const [formData, setFormData] = useState({
@@ -93,7 +93,8 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
   if (!isOpen) return null;
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    let { name, value, type, checked } = e.target;
+    if (type === 'text') value = capitalize(value);
     const val = type === 'checkbox' ? checked : value;
     
     setFormData(prev => {

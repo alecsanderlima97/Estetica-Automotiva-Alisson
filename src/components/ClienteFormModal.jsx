@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Save, User, Phone, Mail, MapPin, Instagram, Car, Cake, Camera, AlertTriangle, Truck, Upload, Plus } from 'lucide-react';
+import { X, Save, User, Phone, Mail, MapPin, Instagram, Car, Cake, Camera, AlertTriangle, Truck, Upload, Plus, FileText } from 'lucide-react';
 import { useData } from '../context/DataContext';
+import { maskCPF, maskCNPJ, maskPhone, maskCEP, maskTime, capitalize } from '../utils/masks';
 
 const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
   const { clientes } = useData();
@@ -9,9 +10,11 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
   
   const [formData, setFormData] = useState({
     nome: '',
-    telefone: '55 ',
+    telefone: '',
     email: '',
     cpf: '',
+    cnpj: '',
+    documento: '', // Novo para unificar ou apenas CPF/CNPJ
     instagram: '',
     dataAniversario: '',
     observacoes: '',
@@ -140,34 +143,39 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
   }, [formData.cpf, clientes, clienteParaEditar]);
 
   const applyMask = (name, value) => {
-    let raw = value.replace(/\D/g, '');
-    if (name === 'cpf') return raw.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})/, '$1-$2').slice(0, 14);
-    if (name === 'cep') return raw.replace(/(\d{5})(\d)/, '$1-$2').slice(0, 9);
-    if (name === 'telefone') {
-      if (!raw.startsWith('55') && raw.length > 0) raw = '55' + raw;
-      let masked = raw;
-      if (raw.length > 2) masked = raw.replace(/(\d{2})(\d)/, '$1 ($2');
-      if (raw.length > 4) masked = masked.replace(/(\d{2}) (\(\d{2})(\d)/, '$1 $2) $3');
-      if (raw.length > 9) masked = masked.replace(/(\) \d{5})(\d)/, '$1-$2');
-      return masked.slice(0, 19);
+    if (name === 'cpf' || name === 'cnpj') {
+      const raw = value.replace(/\D/g, '');
+      if (raw.length <= 11) return maskCPF(value);
+      return maskCNPJ(value);
     }
+    if (name === 'telefone') return maskPhone(value);
+    if (name === 'cep') return maskCEP(value);
     if (name === 'placa') return value.toUpperCase().slice(0, 7);
+    if (['nome', 'logradouro', 'bairro', 'cidade', 'estado', 'marca', 'modelo', 'cor'].includes(name)) {
+      return capitalize(value);
+    }
     return value;
   };
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name === 'nome') value = value.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
-    if (name === 'telefone' && value.length < 3) {
-      setFormData(prev => ({ ...prev, [name]: '55 ' }));
-      return;
+    // Opcionalmente capitaliza tudo que for texto se nao estiver na lista acima
+    // Mas vamos seguir a regra do usuario: "todos os campos" para começar com maiuscula
+    if (e.target.type === 'text' || e.target.tagName === 'TEXTAREA') {
+        if (!['email', 'instagram', 'placa', 'cpf', 'cep', 'telefone'].includes(name)) {
+            value = capitalize(value);
+        }
     }
+
     const maskedValue = applyMask(name, value);
     setFormData(prev => ({ ...prev, [name]: maskedValue }));
   };
 
   const handleVeiculoChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === 'placa') value = value.toUpperCase().slice(0, 7);
+    else if (['marca', 'modelo', 'cor'].includes(name)) value = capitalize(value);
+    
     setFormData(prev => {
       const novosVeiculos = [...prev.veiculos];
       novosVeiculos[veiculoIndex] = { ...novosVeiculos[veiculoIndex], [name]: value };
@@ -312,11 +320,11 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>CPF</label>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>CPF / CNPJ</label>
                   <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '10px' }}>
-                    <Mail size={18} color="#888" style={{ marginRight: '10px' }} />
+                    <FileText size={18} color="#888" style={{ marginRight: '10px' }} />
                     <input type="text" name="cpf" value={formData.cpf || ''} onChange={handleChange}
-                      style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }} placeholder="000.000.000-00" />
+                      style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }} placeholder="000.000.000-00 ou 00.000..." />
                   </div>
                 </div>
                 <div>

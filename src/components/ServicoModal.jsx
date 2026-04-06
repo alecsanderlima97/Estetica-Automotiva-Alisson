@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { X, Save, BookOpen, DollarSign, Clock, Layers } from 'lucide-react';
+import { capitalize, maskTime } from '../utils/masks';
 
 const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
   const [formData, setFormData] = useState({
@@ -107,7 +107,7 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
                 type="text" 
                 value={formData.nome}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+                  const val = capitalize(e.target.value);
                   setFormData({...formData, nome: val});
                 }}
                 required
@@ -140,8 +140,11 @@ const ServicoModal = ({ isOpen, onClose, onSalvar, servicoParaEditar }) => {
                 <input 
                   type="text" 
                   value={formData.tempoEstimado}
-                  onChange={(e) => setFormData({...formData, tempoEstimado: e.target.value})}
-                  placeholder="Ex: 2h 30min"
+                  onChange={(e) => {
+                    const val = maskTime(e.target.value);
+                    setFormData({...formData, tempoEstimado: val});
+                  }}
+                  placeholder="Ex: 4h"
                   style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }}
                 />
               </div>
