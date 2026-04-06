@@ -18,17 +18,12 @@ export const maskCNPJ = (value) => {
 };
 
 export const maskPhone = (value) => {
-  let r = value.replace(/\D/g, '');
-  if (r.length > 11) r = r.slice(0, 11);
-  if (r.length > 10) {
-    r = r.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-  } else if (r.length > 5) {
-    r = r.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-  } else if (r.length > 2) {
-    r = r.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-  } else if (r.length > 0) {
-    r = r.replace(/^(\d*)/, '($1');
-  }
+  if (!value) return "";
+  const r = value.replace(/\D/g, "").slice(0, 11);
+  if (r.length > 10) return `(${r.slice(0, 2)}) ${r.slice(2, 7)}-${r.slice(7)}`;
+  if (r.length > 6) return `(${r.slice(0, 2)}) ${r.slice(2, 6)}-${r.slice(6)}`;
+  if (r.length > 2) return `(${r.slice(0, 2)}) ${r.slice(2)}`;
+  if (r.length > 0) return `(${r}`;
   return r;
 };
 

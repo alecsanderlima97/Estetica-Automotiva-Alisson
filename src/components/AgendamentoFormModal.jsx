@@ -13,8 +13,8 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
     status: 'Agendado',
     pagoSinal: false,
     buscaTerm: '',
-    valorAdicional: '',
-    duracao: '02:00' // HH:mm
+    duracao: '02:00', // HH:mm
+    observacoes: ''
   });
 
   const [valorSinal, setValorSinal] = useState(0);
@@ -43,7 +43,8 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
           duracao: agendamentoParaEditar.duracao || '02:00',
           status: agendamentoParaEditar.status,
           pagoSinal: agendamentoParaEditar.pagoSinal || false,
-          valorAdicional: agendamentoParaEditar.valorAdicional || ''
+          valorAdicional: agendamentoParaEditar.valorAdicional || '',
+          observacoes: agendamentoParaEditar.observacoes || ''
         });
       } else {
         setFormData({
@@ -57,7 +58,8 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
           status: 'Agendado',
           pagoSinal: false,
           buscaTerm: '',
-          valorAdicional: ''
+          valorAdicional: '',
+          observacoes: ''
         });
       }
     }
@@ -313,6 +315,27 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
                   style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }} />
               </div>
             </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', color: '#888', fontSize: '13px' }}>Observações da Ordem de Serviço</label>
+            <textarea 
+              name="observacoes" 
+              value={formData.observacoes} 
+              onChange={handleChange} 
+              placeholder="Ex: Cliente relatou barulho na suspensão, entregar até as 18h..."
+              style={{ 
+                width: '100%', 
+                background: 'rgba(0,0,0,0.3)', 
+                border: '1px solid rgba(255,255,255,0.1)', 
+                borderRadius: '8px', 
+                padding: '12px', 
+                color: 'var(--text-light)', 
+                outline: 'none',
+                minHeight: '80px',
+                resize: 'none'
+              }}
+            />
           </div>
 
           <div style={{ textAlign: 'right', padding: '10px 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>

@@ -522,8 +522,8 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
             <button type="button" onClick={onClose} style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#888', cursor: 'pointer' }}>
               CANCELAR
             </button>
-            <button type="submit" className="action-btn" style={{ padding: '10px 25px' }}>
-              <Save size={18} /> {clienteParaEditar ? 'ATUALIZAR CADASTRO' : 'FINALIZAR CADASTRO'}
+            <button type="submit" className="action-btn" style={{ padding: '12px 35px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 4px 15px rgba(var(--primary-rgb), 0.3)' }}>
+              <Save size={18} /> {clienteParaEditar ? 'SALVAR INFORMAÇÕES DO PROPRIETÁRIO' : 'SALVAR NOVO PROPRIETÁRIO'}
             </button>
           </div>
         </form>
