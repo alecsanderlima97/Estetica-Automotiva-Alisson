@@ -109,15 +109,35 @@ const Settings = () => {
               </label>
             </div>
 
-            <div style={{ width: '100%' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '6px' }}>Nome do Proprietário</label>
-              <input 
-                type="text" 
-                name="nome" 
-                value={userProfile.nome} 
-                onChange={handleProfileChange}
-                style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white', outline: 'none' }}
-              />
+            <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>Nome</label>
+                <input type="text" name="nome" value={userProfile.nome} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>E-mail</label>
+                <input type="email" name="email" value={userProfile.email} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>CPF</label>
+                <input type="text" name="cpf" value={userProfile.cpf} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>CNPJ</label>
+                <input type="text" name="cnpj" value={userProfile.cnpj} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>Telefone</label>
+                <input type="text" name="telefone" value={userProfile.telefone} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>Instagram</label>
+                <input type="text" name="instagram" value={userProfile.instagram} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
+              <div style={{ gridColumn: 'span 2' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#888', marginBottom: '6px', textTransform: 'uppercase' }}>Endereço Completo</label>
+                <input type="text" name="endereco" value={userProfile.endereco} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
+              </div>
             </div>
           </div>
         </div>
