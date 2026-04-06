@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { Download, Upload, Shield, Database, Palette, User as UserIcon, Camera } from 'lucide-react';
+import { Download, Upload, Shield, Database, Palette, User as UserIcon, Camera, Save as SaveIcon } from 'lucide-react';
 
 const Settings = () => {
   const { exportData, importData, theme, setTheme, userProfile, setUserProfile } = useData();
@@ -19,6 +19,12 @@ const Settings = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleSaveProfile = (e) => {
+    e.preventDefault();
+    localStorage.setItem('alisson_user_profile', JSON.stringify(userProfile));
+    alert('Configurações de perfil do Alisson salvas com sucesso!');
   };
 
   const [newPassword, setNewPassword] = useState('');
@@ -139,6 +145,21 @@ const Settings = () => {
                 <input type="text" name="endereco" value={userProfile.endereco} onChange={handleProfileChange} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', color: 'white' }} />
               </div>
             </div>
+
+            <button 
+              onClick={handleSaveProfile}
+              className="action-btn"
+              style={{ 
+                width: '100%', 
+                justifyContent: 'center', 
+                padding: '14px',
+                background: 'var(--primary-color)',
+                boxShadow: '0 4px 15px rgba(var(--primary-rgb), 0.3)'
+              }}
+            >
+              <SaveIcon size={20} style={{ marginRight: '8px' }} />
+              SALVAR CONFIGURAÇÕES DO ALISSON
+            </button>
           </div>
         </div>
 

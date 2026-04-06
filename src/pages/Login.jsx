@@ -17,10 +17,10 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     setLoading(true);
     
-    // Lista de usuários autorizados
+    // Lista de usuários autorizados conforme solicitado pelo desenvolvedor
     const authorizedUsers = [
-      { email: 'alisson@estetica.com', password: '123', name: 'Alisson Detailing', role: 'admin' },
-      { email: 'suporte@estetica.com', password: 'dev', name: 'Suporte Técnico', role: 'dev' }
+      { email: 'walissonrodrigues1055@gmail.com', password: 'ADMIN', name: 'Alisson Detailing', role: 'admin' },
+      { email: 'orquestracs@gmail.com', password: 'ADMIN', name: 'Suporte Técnico', role: 'dev' }
     ];
 
     const matchedUser = authorizedUsers.find(u => u.email === email && u.password === password);
