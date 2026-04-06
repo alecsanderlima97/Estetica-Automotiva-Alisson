@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar, Clock, User, BookOpen, QrCode, Copy, CheckCircle, Car, AlertCircle, Search, DollarSign } from 'lucide-react';
 import { capitalize } from '../utils/masks';
 

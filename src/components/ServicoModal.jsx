@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { X, Save, BookOpen, DollarSign, Clock, Layers } from 'lucide-react';
 import { capitalize, maskTime } from '../utils/masks';
 
