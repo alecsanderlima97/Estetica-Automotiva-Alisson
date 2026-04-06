@@ -104,6 +104,18 @@ const Agendamentos = () => {
   const [filtroData, setFiltroData] = useState(new Date().toLocaleDateString('pt-BR'));
   const [dataVista, setDataVista] = useState(new Date());
 
+  useEffect(() => {
+    const savedDate = localStorage.getItem('agenda_filtro_data');
+    if (savedDate) {
+      setFiltroData(savedDate);
+      const parts = savedDate.split('/');
+      if (parts.length === 3) {
+        setDataVista(new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00`));
+      }
+      localStorage.removeItem('agenda_filtro_data');
+    }
+  }, []);
+
   const handleSalvarAgendamento = (dados) => {
     if (agendamentoParaEditar) {
       updateAgendamento(agendamentoParaEditar.id, dados);
