@@ -6,195 +6,43 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
 
   if (!isOpen || !agendamento) return null;
 
-  const handlePrint = () => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+  const downloadPDF = async () => {
+    const element = document.getElementById('printable-os-preview');
+    if (!element || !window.html2canvas || !window.jspdf) {
+      alert("Erro ao carregar motor de PDF. Por favor, aguarde 2 segundos e tente novamente.");
+      return;
+    }
 
-    const valorTotal = agendamento.valor || 0;
-    const valorSinal = valorTotal * 0.3;
-    const valorRestante = valorTotal - (agendamento.pagoSinal ? valorSinal : 0);
-    const agendamentoId = agendamento.id.toString().padStart(4, '0');
-    const dataEmissao = new Date().toLocaleDateString('pt-BR');
-    const horaEmissao = new Date().toLocaleTimeString('pt-BR').substring(0, 5);
+    try {
+      // Captura o elemento com alta qualidade (escala 3x)
+      const canvas = await window.html2canvas(element, {
+        scale: 3,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: 850 // Fixa a largura para garantir consistência
+      });
 
-    const htmlContent = `
-      <html>
-        <head>
-          <title>Ordem de Serviço #${agendamentoId}</title>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Oswald:wght@400;700;900&display=swap');
-            
-            body { 
-              margin: 0; 
-              padding: 30px; 
-              font-family: 'Inter', -apple-system, sans-serif; 
-              color: #000 !important; 
-              background: #fff !important; 
-              line-height: 1.2;
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
-            
-            * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; margin: 0; color: #111 !important; }
-            
-            .header { border-bottom: 5px solid #4a5d23; padding-bottom: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-            .primary-bg { background-color: #4a5d23 !important; color: white !important; }
-            .dark-bg { background-color: #111 !important; color: white !important; }
-            .gray-bg { background-color: #f8f9fa !important; }
-            .gold-bg { background-color: #fff9f0 !important; border: 1px solid #ffeeba !important; }
-            
-            .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-            .box { padding: 15px; border-radius: 12px; border: 1px solid #ddd; }
-            
-            table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
-            th { padding: 10px; background: #eee !important; border-bottom: 2px solid #000; text-align: left; font-size: 10px; text-transform: uppercase; color: #000; }
-            td { padding: 10px; border-bottom: 1px solid #ddd; font-size: 13px; color: #000; }
-            
-            .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-            .check-item { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #000; }
-            .check-box { width: 12px; height: 12px; border: 1.5px solid #000; border-radius: 2px; }
-            
-            .terms { font-size: 9px; color: #333; text-align: justify; line-height: 1.3; }
-            .signature { text-align:center; margin-top: 35px; }
-            .sig-line { border-top: 2px solid #000; padding-top: 8px; font-weight: 800; font-size: 11px; }
-            
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 80px; font-weight: 900; color: rgba(0,0,0,0.03) !important; white-space: nowrap; z-index: -1; font-family: 'Oswald'; pointer-events: none; }
-            
-            @media print {
-              @page { size: A4; margin: 1cm; }
-              body { padding: 0; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="watermark">ALISSON ESTÉTICA</div>
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
 
-          <div class="header">
-            <div style="display: flex; align-items: center; gap: 15px;">
-               <div style="width: 60px; height: 60px; background: #000 !important; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #4a5d23 !important;">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-               </div>
-               <div>
-                 <h1 style="font-size: 26px; color: #000 !important;">ALISSON ESTÉTICA AUTOMOTIVA</h1>
-                 <p style="margin: 3px 0 0 0; font-size: 12px; color: #444 !important; font-weight: 600;">Rua das Garagens, 123 - Centro | (15) 99677-5714</p>
-               </div>
-            </div>
-            <div style="text-align: right;">
-              <div class="primary-bg" style="padding: 8px 15px; border-radius: 8px; font-weight: 900; font-size: 13px; text-transform: uppercase;">OS #${agendamentoId}</div>
-              <p style="margin: 8px 0 0 0; font-size: 10px; color: #555 !important; font-weight: 700;">EMISSÃO: ${dataEmissao} | ${horaEmissao}</p>
-            </div>
-          </div>
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-          <div class="grid-2">
-            <div class="box gray-bg">
-              <h3 style="font-size: 11px; color: #4a5d23 !important; margin-bottom: 8px; font-weight: 900;">PROPRIETÁRIO / CLIENTE</h3>
-              <div style="font-size: 17px; font-weight: 900; color: #000;">${cliente?.nome || agendamento.cliente}</div>
-              <div style="font-size: 12px; color: #333; margin-top: 4px;">DOC: ${cliente?.cpf || '---'} | TEL: ${cliente?.telefone || agendamento.telefone}</div>
-            </div>
-            <div class="box dark-bg">
-              <h3 style="font-size: 10px; color: #4a5d23 !important; margin-bottom: 8px; font-weight: 900;">IDENTIFICAÇÃO DO VEÍCULO</h3>
-              <div style="font-size: 17px; font-weight: 900; color: #fff;">${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || "Veículo"}</div>
-              <div style="font-size: 12px; color: #eee; margin-top: 4px;">PLACA: <span style="background: #fff; color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 900; margin-left: 5px;">${cliente?.veiculo?.placa || agendamento.veiculo || '---'}</span></div>
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th style="width: 60%">DESCRIÇÃO DO SERVIÇO</th>
-                <th style="text-align: center;">ENTRADA</th>
-                <th style="text-align: right;">VALOR TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div style="font-weight: 900; font-size: 15px; color: #000;">${agendamento.servico}</div>
-                  <div style="font-size: 11px; color: #555; margin-top: 4px;">Detalhamento e estética profissional de alto padrão.</div>
-                </td>
-                <td style="text-align: center; font-weight: 700;">${agendamento.dataStr}<br><span style="color: #666; font-size: 11px;">às ${agendamento.horario}h</span></td>
-                <td style="text-align: right; font-weight: 900; font-size: 15px;">R$ ${(valorTotal - (parseFloat(agendamento.valorAdicional) || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-              </tr>
-              ${parseFloat(agendamento.valorAdicional) > 0 ? `
-              <tr class="gray-bg">
-                <td style="font-size: 11px; font-weight: bold;">(+) Adicional de Complexidade / Urgência</td>
-                <td></td>
-                <td style="text-align: right; font-weight: 900;">R$ ${parseFloat(agendamento.valorAdicional).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-              </tr>` : ''}
-            </tbody>
-          </table>
-
-          <div class="grid-2">
-            <div class="box">
-              <h3 style="font-size: 12px; margin-bottom: 12px; font-weight: 900; border-bottom: 1px solid #ddd; padding-bottom: 5px;">CHECKLIST DE RECEBIMENTO</h3>
-              <div class="checklist">
-                <div class="check-item"><div class="check-box"></div> Tapetes Borracha</div>
-                <div class="check-item"><div class="check-box"></div> Painel OK</div>
-                <div class="check-item"><div class="check-box"></div> Porta-Objetos</div>
-                <div class="check-item"><div class="check-box"></div> Step / Macaco</div>
-                <div class="check-item"><div class="check-box"></div> Antena</div>
-                <div class="check-item"><div class="check-box"></div> Combustível ___</div>
-                <div class="check-item"><div class="check-box"></div> Quilometragem ___</div>
-                <div class="check-item"><div class="check-box"></div> Chave Reserva</div>
-              </div>
-            </div>
-            <div class="box gold-bg">
-              <h3 style="font-size: 11px; color: #856404 !important; margin-bottom: 8px; font-weight: 900; border-bottom: 1px solid #ffeeba; padding-bottom: 5px;">RELATÓRIO DE AVARIAS</h3>
-              <div style="font-size: 11px; min-height: 70px; color: #856404 !important;">
-                ${cliente?.veiculo?.avarias || "Inspeção visual técnica realizada no ato do recebimento do veículo."}
-              </div>
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; gap: 30px;">
-            <div style="flex: 1;">
-              <h3 style="font-size: 11px; margin-bottom: 8px; font-weight: 900;">TERMOS E RESPONSABILIDADE</h3>
-              <div class="terms">
-                1. Não nos responsabilizamos por objetos de valor não declarados. 2. Prazo de garantia de 24h para lavagens simples. 3. Caso o veículo não seja retirado em até 48h após o aviso, poderá ser cobrada taxa de pátio (R$ 50/dia). 4. O cliente autoriza o uso de imagens para fins de marketing.
-              </div>
-            </div>
-            <div style="width: 250px;">
-              <div style="border: 2px solid #000; padding: 15px; border-radius: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #444; margin-bottom: 5px;">
-                  <span>Subtotal:</span><span>R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #16a34a !important; font-weight: 900; margin-bottom: 10px;">
-                  <span>Sinal Pago:</span><span>- R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div style="border-top: 2px solid #000; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-                  <span style="font-weight: 900; font-size: 12px; color: #000;">TOTAL À PAGAR:</span>
-                  <span class="dark-bg" style="font-size: 18px; font-weight: 900; padding: 4px 10px; border-radius: 6px;">R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top: 50px;">
-            <div class="signature">
-              <div class="sig-line">ALISSON ESTÉTICA AUTOMOTIVA</div>
-              <div style="font-size: 9px; color: #444; margin-top: 5px; font-weight: bold;">RESPONSÁVEL TÉCNICO</div>
-            </div>
-            <div class="signature">
-              <div class="sig-line">ASSINATURA DO CLIENTE</div>
-              <div style="font-size: 9px; color: #444; margin-top: 5px; font-weight: bold;">ESTOU DE ACORDO COM OS SERVIÇOS</div>
-            </div>
-          </div>
-        </body>
-      </html>
-    `;
-
-    const doc = iframe.contentWindow.document;
-    doc.open();
-    doc.write(htmlContent);
-    doc.close();
-
-    // Aguardar as fontes e o layout renderizarem no iframe
-    setTimeout(() => {
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    }, 1000); // 1 segundo de espera garantida
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`OS-${agendamento.id.toString().padStart(4, '0')}-${(cliente?.nome || agendamento.cliente).split(' ')[0]}.pdf`);
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      alert("Houve um erro ao gerar o PDF. Tente usar a opção de imprimir se o download falhar.");
+    }
   };
+
   const valorTotal = agendamento.valor || 0;
   const valorSinal = valorTotal * 0.3;
   const valorRestante = valorTotal - (agendamento.pagoSinal ? valorSinal : 0);
@@ -206,12 +54,6 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000,
       padding: '20px'
     }}>
-      <iframe 
-        ref={iframeRef} 
-        style={{ position: 'absolute', top: '-10000px', left: '-10000px', width: '100%', height: '100%' }} 
-        title="Print OS"
-      />
-
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px', zIndex: 2001 }}>
         <button 
           onClick={() => {
@@ -224,8 +66,8 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
         >
           <Phone size={20} /> ENVIAR WHATSAPP
         </button>
-        <button onClick={handlePrint} className="action-btn" style={{ background: '#111', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-          <Printer size={20} /> GERAR PDF / IMPRIMIR
+        <button onClick={downloadPDF} className="action-btn" style={{ background: '#111', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
+          <Printer size={20} /> BAIXAR PDF / IMPRIMIR
         </button>
         <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <X size={24} />
