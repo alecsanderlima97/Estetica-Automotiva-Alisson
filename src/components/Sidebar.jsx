@@ -47,7 +47,7 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
         
         <NavLink to="/clientes" className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")} onClick={handleNavLinkClick}>
           <Car size={20} />
-          <span>Frota & Clientes</span>
+          <span>Veículos & Clientes</span>
         </NavLink>
         
         <NavLink to="/catalogo" className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")} onClick={handleNavLinkClick}>
