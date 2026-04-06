@@ -98,15 +98,19 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       }}>
         {/* Cabeçalho Minimalista */}
         <div style={{ borderBottom: '2px solid #000', paddingBottom: '20px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-             <div style={{ width: '60px', height: '60px', border: '2px solid #000', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000' }}>
-               <Car size={40} />
-             </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+             {userProfile.foto ? (
+               <img src={userProfile.foto} alt="Logo" style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #000' }} />
+             ) : (
+               <div style={{ width: '80px', height: '80px', borderRadius: '12px', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '30px', fontWeight: '900' }}>
+                 A
+               </div>
+             )}
              <div>
-               <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
-               <div style={{ fontSize: '10px', color: '#000', marginTop: '4px' }}>
+               <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000', textTransform: 'uppercase' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
+               <div style={{ fontSize: '10px', color: '#000', marginTop: '6px' }}>
                  <p style={{ margin: '0 0 2px 0' }}>{userProfile.endereco} | <strong>{userProfile.telefone}</strong></p>
-                 <p style={{ margin: 0, fontSize: '11px', fontWeight: 'bold' }}>CNPJ: {userProfile.cnpj}</p>
+                 <p style={{ margin: 0, fontSize: '11px', fontWeight: 'bold', background: 'rgba(0,0,0,0.05)', padding: '2px 5px', display: 'inline-block' }}>CNPJ: {userProfile.cnpj}</p>
                </div>
              </div>
           </div>
