@@ -175,7 +175,10 @@ const Dashboard = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {atendimentosHoje.length > 0 ? atendimentosHoje.map(a => (
               <div key={a.id} style={{ display: 'flex', alignItems: 'center', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <div style={{ width: '60px', fontWeight: 'bold', color: 'var(--primary-color)', fontSize: '14px' }}>{a.horario}</div>
+                <div style={{ width: '85px', flexShrink: 0 }}>
+                  <div style={{ fontWeight: 'bold', color: 'var(--primary-color)', fontSize: '14px' }}>{a.horario}</div>
+                  <div style={{ fontSize: '10px', color: '#888', fontFamily: 'monospace' }}>OS #{a.osNumber?.toString().padStart(5, '0') || '---'}</div>
+                </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: '500', color: 'var(--text-light)' }}>{a.cliente}</div>
                   <div style={{ fontSize: '12px', color: '#666' }}>{a.servico}</div>

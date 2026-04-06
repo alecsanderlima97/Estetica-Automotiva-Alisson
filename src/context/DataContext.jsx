@@ -205,6 +205,7 @@ export const DataProvider = ({ children }) => {
     telefone: '+55 (15) 99767-5822',
     cnpj: '42.563.724/0001-93',
     instagram: '@Alisson.est_automotiva',
+    osCounter: 1,
     foto: null 
   }));
 
@@ -213,6 +214,24 @@ export const DataProvider = ({ children }) => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('alisson_theme', theme);
   }, [theme]);
+
+  // Efeito para migrar/corrigir agendamentos (numeração OS)
+  useEffect(() => {
+    const agendamentosSemNumero = agendamentos.some(a => !a.osNumber);
+    
+    if (agendamentosSemNumero) {
+      let counter = 1;
+      setAgendamentos(prev => prev.map(a => {
+        if (!a.osNumber) {
+          const num = counter++;
+          return { ...a, osNumber: num };
+        }
+        if (a.osNumber >= counter) counter = a.osNumber + 1;
+        return a;
+      }));
+      setUserProfile(prev => ({ ...prev, osCounter: counter }));
+    }
+  }, [agendamentos]);
 
   // Efeito para migrar/corrigir categorias nos serviços salvos
   useEffect(() => {
@@ -266,7 +285,14 @@ export const DataProvider = ({ children }) => {
   };
 
   const addAgendamento = (agendamento) => {
-    setAgendamentos(prev => [...prev, { ...agendamento, id: Date.now(), pagoSinal: agendamento.pagoSinal || false }]);
+    const nextOS = userProfile.osCounter || 1;
+    setAgendamentos(prev => [...prev, { 
+      ...agendamento, 
+      id: Date.now(), 
+      osNumber: nextOS,
+      pagoSinal: agendamento.pagoSinal || false 
+    }]);
+    setUserProfile(prev => ({ ...prev, osCounter: nextOS + 1 }));
   };
 
   const updateAgendamento = (id, updatedData) => {

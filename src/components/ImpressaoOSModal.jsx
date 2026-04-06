@@ -67,7 +67,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px', zIndex: 2001 }}>
         <button 
           onClick={() => {
-            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.id.toString().padStart(4, '0')}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || ''}%0A*Placa:* ${cliente?.veiculo?.placa || agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
+            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || ''}%0A*Placa:* ${cliente?.veiculo?.placa || agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
             const phone = (cliente?.telefone || agendamento.telefone || '').replace(/\D/g, '');
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg.replace(/%0A/g, '\n'))}`, '_blank');
           }}
@@ -104,12 +104,15 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
              </div>
              <div>
                <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
-               <p style={{ margin: 0, fontSize: '10px', color: '#000', fontWeight: '500' }}>{userProfile.endereco} | CNPJ: {userProfile.cnpj} | {userProfile.telefone}</p>
+               <div style={{ fontSize: '10px', color: '#000', marginTop: '4px' }}>
+                 <p style={{ margin: '0 0 2px 0' }}>{userProfile.endereco} | <strong>{userProfile.telefone}</strong></p>
+                 <p style={{ margin: 0, fontSize: '11px', fontWeight: 'bold' }}>CNPJ: {userProfile.cnpj}</p>
+               </div>
              </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '13px', fontWeight: 'bold', border: '2px solid #000', padding: '5px 15px', borderRadius: '4px', display: 'inline-block' }}>
-               ORDEM DE SERVIÇO #{agendamento.id.toString().padStart(4, '0')}
+            <div style={{ fontSize: '14px', fontWeight: '900', border: '3px solid #000', padding: '8px 18px', borderRadius: '4px', display: 'inline-block' }}>
+               OS #{agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}
             </div>
             <p style={{ margin: '5px 0 0 0', fontSize: '10px', color: '#000' }}>
               Emissão: {new Date().toLocaleDateString('pt-BR')}

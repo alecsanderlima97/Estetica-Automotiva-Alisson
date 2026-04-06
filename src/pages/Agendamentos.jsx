@@ -310,6 +310,7 @@ const Agendamentos = () => {
         <table className="premium-table">
           <thead>
               <tr>
+                <th>OS #</th>
                 <th>Período</th>
                 <th>Cliente</th>
                 <th>Veículo</th>
@@ -325,6 +326,9 @@ const Agendamentos = () => {
                 .sort((a,b) => a.horario.localeCompare(b.horario))
                 .map((agendamento) => (
                 <tr key={agendamento.id}>
+                  <td style={{ color: 'var(--primary-color)', fontWeight: '900', fontFamily: 'monospace' }}>
+                    #{agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : '---'}
+                  </td>
                   <td style={{ fontWeight: 'bold' }}>
                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                        <span style={{ color: 'var(--primary-color)', fontSize: '15px' }}>{agendamento.horario} - {getHorarioFim(agendamento.horario, agendamento.duracao)}</span>
