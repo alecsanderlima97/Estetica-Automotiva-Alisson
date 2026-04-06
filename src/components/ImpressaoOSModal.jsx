@@ -67,7 +67,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px', zIndex: 2001 }}>
         <button 
           onClick={() => {
-            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || ''}%0A*Placa:* ${cliente?.veiculo?.placa || agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
+            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
             const phone = (cliente?.telefone || agendamento.telefone || '').replace(/\D/g, '');
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg.replace(/%0A/g, '\n'))}`, '_blank');
           }}
@@ -134,8 +134,8 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
 
           <div style={{ padding: '15px', border: '1px solid #000', borderRadius: '8px' }}>
             <div style={{ fontSize: '10px', fontWeight: '900', marginBottom: '5px', textTransform: 'uppercase' }}>Veículo</div>
-            <div style={{ fontSize: '16px', fontWeight: '800' }}>{cliente?.veiculo?.marca} {cliente?.veiculo?.modelo}</div>
-            <div style={{ fontSize: '12px' }}>PLACA: <strong>{cliente?.veiculo?.placa || agendamento.veiculo || '---'}</strong></div>
+            <div style={{ fontSize: '16px', fontWeight: '800' }}>{agendamento.veiculo || 'Não informado'}</div>
+            <div style={{ fontSize: '12px' }}>Procedimento: <strong>{agendamento.servico}</strong></div>
           </div>
         </div>
 
@@ -182,7 +182,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
           <div style={{ padding: '15px', border: '1px solid #000', borderRadius: '8px' }}>
             <h3 style={{ margin: '0 0 5px 0', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase' }}>Avarias Identificadas</h3>
             <div style={{ fontSize: '11px', minHeight: '60px', lineHeight: '1.4' }}>
-               {cliente?.veiculo?.avarias || "Nenhuma avaria declarada no ato do recebimento."}
+               {agendamento.avarias || "Nenhuma avaria declarada no ato do recebimento."}
             </div>
           </div>
         </div>

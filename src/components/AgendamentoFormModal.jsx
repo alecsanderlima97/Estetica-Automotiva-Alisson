@@ -4,6 +4,7 @@ import { X, Save, Calendar, Clock, User, BookOpen, QrCode, Copy, CheckCircle, Ca
 const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, agendamentos, agendamentoParaEditar }) => {
   const [formData, setFormData] = useState({
     clienteId: '',
+    veiculoId: '',
     servicoId: '',
     categoriaNome: 'Pequeno', // Pequeno (base), Médio, Grande / SUV
     data: new Date().toISOString().split('T')[0],
@@ -28,8 +29,11 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
         if (agendamentoParaEditar.servico.includes('(Médio)')) cat = 'Médio';
         if (agendamentoParaEditar.servico.includes('(Grande / SUV)')) cat = 'Grande / SUV';
 
+        const vId = agendamentoParaEditar.veiculoId || (cliente?.veiculos?.[0]?.id || '');
+
         setFormData({
           clienteId: cliente?.id || '',
+          veiculoId: vId,
           buscaTerm: cliente?.nome || '',
           servicoId: servico?.id || '',
           categoriaNome: cat,
@@ -43,6 +47,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
       } else {
         setFormData({
           clienteId: '',
+          veiculoId: '',
           servicoId: '',
           categoriaNome: 'Pequeno',
           data: new Date().toISOString().split('T')[0],
@@ -83,7 +88,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
       setValorTotal(0);
       setValorSinal(0);
     }
-  }, [formData.servicoId, formData.categoriaNome, formData.valorAdicional, servicos]);
+  }, [formData.servicoId, formData.categoriaNome, formData.valorAdicional, servicos, agendamentoParaEditar]);
 
   if (!isOpen) return null;
 
@@ -95,7 +100,13 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
       const newData = { ...prev, [name]: val };
       if (name === 'clienteId') {
         const cliente = clientes.find(c => c.id.toString() === value.toString());
-        if (cliente) newData.buscaTerm = cliente.nome;
+        if (cliente) {
+          newData.buscaTerm = cliente.nome;
+          // Seleciona automaticamente o primeiro veículo se houver apenas um
+          if (cliente.veiculos?.length > 0) {
+            newData.veiculoId = cliente.veiculos[0].id.toString();
+          }
+        }
       }
       if (name === 'pagoSinal' && val === true) {
         newData.status = 'Confirmado';
@@ -110,6 +121,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
     e.preventDefault();
     const cliente = clientes.find(c => c.id.toString() === formData.clienteId.toString());
     const servico = servicos.find(s => s.id.toString() === formData.servicoId.toString());
+    const veiculo = cliente?.veiculos?.find(v => v.id.toString() === formData.veiculoId.toString());
     
     let nomeServicoFinal = servico?.nome || '';
     if (formData.categoriaNome !== 'Pequeno') {
@@ -120,7 +132,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
       ...formData,
       cliente: cliente?.nome || '',
       telefone: cliente?.telefone?.replace(/\D/g, '') || '',
-      veiculo: `${cliente?.veiculo?.modelo} (${cliente?.veiculo?.placa})`,
+      veiculo: veiculo ? `${veiculo.modelo} (${veiculo.placa})` : 'Veículo não selecionado',
       servico: nomeServicoFinal,
       valor: valorTotal,
       dataStr: new Date(formData.data + 'T12:00:00').toLocaleDateString('pt-BR')
@@ -129,6 +141,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
 
   const selectedServico = servicos.find(s => s.id.toString() === formData.servicoId.toString());
   const selectedCliente = clientes.find(c => c.id.toString() === formData.clienteId.toString());
+  const currentVeiculo = selectedCliente?.veiculos?.find(v => v.id.toString() === formData.veiculoId.toString()) || selectedCliente?.veiculos?.[0];
 
   return (
     <div style={{
@@ -160,18 +173,43 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
                   <select name="clienteId" value={formData.clienteId} onChange={handleChange} required
                     style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none', cursor: 'pointer' }}>
                     <option value="" style={{ background: '#111' }}>Selecione o proprietário...</option>
-                    {clientes.map(c => <option key={c.id} value={c.id} style={{ background: '#111' }}>{c.nome} {c.veiculo?.placa ? `(${c.veiculo.placa})` : ''}</option>)}
+                    {clientes.map(c => <option key={c.id} value={c.id} style={{ background: '#111' }}>{c.nome}</option>)}
                   </select>
                 </div>
               </div>
             </div>
 
             {selectedCliente && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(var(--primary-rgb), 0.1)', borderRadius: '8px', border: '1px solid rgba(var(--primary-rgb), 0.2)' }}>
-                <Car size={32} color="var(--primary-color)" />
-                <div>
-                  <div style={{ fontSize: '14px', color: 'white', fontWeight: 'bold' }}>{selectedCliente.veiculo?.modelo || 'Veículo não cadastrado'}</div>
-                  <div style={{ fontSize: '12px', color: '#aaa' }}>Placa: {selectedCliente.veiculo?.placa || '---'} | Cor: {selectedCliente.veiculo?.cor || '---'}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <label style={{ display: 'block', color: 'var(--primary-color)', fontSize: '11px', fontWeight: 'bold' }}>SELECIONE O VEÍCULO</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '8px' }}>
+                  {selectedCliente.veiculos?.map((v) => (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, veiculoId: v.id.toString() }))}
+                      style={{
+                        padding: '10px',
+                        borderRadius: '8px',
+                        border: '1px solid',
+                        borderColor: formData.veiculoId?.toString() === v.id.toString() ? 'var(--primary-color)' : 'rgba(255,255,255,0.05)',
+                        background: formData.veiculoId?.toString() === v.id.toString() ? 'rgba(var(--primary-rgb), 0.1)' : 'rgba(0,0,0,0.2)',
+                        color: formData.veiculoId?.toString() === v.id.toString() ? 'var(--primary-color)' : '#888',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <Car size={16} />
+                      <div style={{ flex: 1, overflow: 'hidden' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.modelo}</div>
+                        <div style={{ fontSize: '10px', opacity: 0.7 }}>{v.placa} • {v.cor}</div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}

@@ -22,8 +22,9 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
     cidade: '',
     estado: '',
     complemento: '',
-    veiculo: {
-      tipo: 'carro', // carro, moto, outros
+    veiculos: [{
+      id: Date.now(),
+      tipo: 'carro',
       marca: '',
       modelo: '',
       placa: '',
@@ -31,8 +32,10 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
       ano: '',
       foto: '',
       avarias: ''
-    }
+    }]
   });
+
+  const [veiculoIndex, setVeiculoIndex] = useState(0);
 
   useEffect(() => {
     if (clienteParaEditar) {
@@ -45,7 +48,8 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
         estado: '',
         complemento: '',
         ...clienteParaEditar,
-        veiculo: clienteParaEditar.veiculo || {
+        veiculos: clienteParaEditar.veiculos?.length > 0 ? clienteParaEditar.veiculos : [{
+          id: Date.now(),
           tipo: 'carro',
           marca: '',
           modelo: '',
@@ -54,8 +58,9 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
           ano: '',
           foto: '',
           avarias: ''
-        }
+        }]
       });
+      setVeiculoIndex(0);
     } else {
       setFormData({
         nome: '',
@@ -72,7 +77,8 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
         cidade: '',
         estado: '',
         complemento: '',
-        veiculo: {
+        veiculos: [{
+          id: Date.now(),
           tipo: 'carro',
           marca: '',
           modelo: '',
@@ -81,12 +87,13 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
           ano: '',
           foto: '',
           avarias: ''
-        }
+        }]
       });
+      setVeiculoIndex(0);
     }
   }, [clienteParaEditar, isOpen]);
 
-  // Lógica de busca de CEP
+  // ... (mesmos useEffects de CEP e CPF) ...
   useEffect(() => {
     const cepClean = formData.cep?.replace(/\D/g, '');
     if (cepClean?.length === 8) {
@@ -107,7 +114,6 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
     }
   }, [formData.cep]);
 
-  // Lógica para puxar dados pelo CPF (Simplificada para o novo modelo)
   useEffect(() => {
     const cpfRaw = formData.cpf?.replace(/\D/g, '');
     if (!clienteParaEditar && cpfRaw?.length === 11) {
@@ -127,7 +133,7 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
           cidade: clienteExistente.cidade || '',
           estado: clienteExistente.estado || '',
           complemento: clienteExistente.complemento || '',
-          veiculo: clienteExistente.veiculo || prev.veiculo
+          veiculos: clienteExistente.veiculos || prev.veiculos
         }));
       }
     }
@@ -162,10 +168,38 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
 
   const handleVeiculoChange = (e) => {
     const { name, value } = e.target;
+    setFormData(prev => {
+      const novosVeiculos = [...prev.veiculos];
+      novosVeiculos[veiculoIndex] = { ...novosVeiculos[veiculoIndex], [name]: value };
+      return { ...prev, veiculos: novosVeiculos };
+    });
+  };
+
+  const addNovoVeiculo = () => {
     setFormData(prev => ({
       ...prev,
-      veiculo: { ...prev.veiculo, [name]: value }
+      veiculos: [...prev.veiculos, {
+        id: Date.now(),
+        tipo: 'carro',
+        marca: '',
+        modelo: '',
+        placa: '',
+        cor: '',
+        ano: '',
+        foto: '',
+        avarias: ''
+      }]
     }));
+    setVeiculoIndex(formData.veiculos.length);
+  };
+
+  const removerVeiculo = (idx) => {
+    if (formData.veiculos.length === 1) return;
+    setFormData(prev => ({
+      ...prev,
+      veiculos: prev.veiculos.filter((_, i) => i !== idx)
+    }));
+    setVeiculoIndex(0);
   };
 
   const handlePhotoUpload = (e) => {
@@ -173,10 +207,11 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          veiculo: { ...prev.veiculo, foto: reader.result }
-        }));
+        setFormData(prev => {
+          const novosVeiculos = [...prev.veiculos];
+          novosVeiculos[veiculoIndex] = { ...novosVeiculos[veiculoIndex], foto: reader.result };
+          return { ...prev, veiculos: novosVeiculos };
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -203,6 +238,8 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
 
   if (!isOpen) return null;
 
+  const currentVeiculo = formData.veiculos[veiculoIndex] || {};
+
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -224,7 +261,7 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
             <User size={18} /> Dados do Cliente
           </div>
           <div style={tabStyle('veiculo')} onClick={() => setActiveTab('veiculo')}>
-            <Car size={18} /> Informações do Veículo
+            <Car size={18} /> Veículos ({formData.veiculos.length})
           </div>
           <div style={tabStyle('endereco')} onClick={() => setActiveTab('endereco')}>
             <MapPin size={18} /> Endereço / Delivery
@@ -348,79 +385,126 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
 
           {activeTab === 'veiculo' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', animation: 'fadeIn 0.3s ease' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Tipo de Veículo</label>
-                  <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '8px 12px' }}>
-                    <select name="tipo" value={formData.veiculo.tipo} onChange={handleVeiculoChange}
-                      style={{ background: 'transparent', border: 'none', color: 'white', width: '100%', outline: 'none', cursor: 'pointer' }}>
-                      <option value="carro" style={{ background: '#222' }}>Carro</option>
-                      <option value="moto" style={{ background: '#222' }}>Moto</option>
-                      <option value="outros" style={{ background: '#222' }}>Outros / Náutica / Aviação</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Marca / Fabricante</label>
-                  <input type="text" name="marca" value={formData.veiculo.marca || ''} onChange={handleVeiculoChange}
-                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: BMW, Honda, Yamaha" />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Modelo / Versão</label>
-                  <input type="text" name="modelo" value={formData.veiculo.modelo || ''} onChange={handleVeiculoChange}
-                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: 320i M Sport / Hornet" />
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Placa</label>
-                    <input type="text" name="placa" value={formData.veiculo.placa || ''} onChange={handleVeiculoChange}
-                      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="ABC1D23" />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Ano</label>
-                    <input type="number" name="ano" value={formData.veiculo.ano || ''} onChange={handleVeiculoChange}
-                      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="2023" />
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Cor Predominante</label>
-                  <input type="text" name="cor" value={formData.veiculo.cor || ''} onChange={handleVeiculoChange}
-                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: Azul Portimão / Preto Fosco" />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Link ou Importar Foto</label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '10px' }}>
-                      <Camera size={18} color="#888" style={{ marginRight: '10px' }} />
-                      <input type="text" name="foto" value={(formData.veiculo.foto && formData.veiculo.foto.startsWith('data:')) ? 'Imagem Importada ✓' : (formData.veiculo.foto || '')} onChange={handleVeiculoChange}
-                        style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }} placeholder="URL da foto" />
-                    </div>
-                    <button type="button" onClick={triggerFileInput} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0 16px', borderRadius: '8px', border: '1px solid var(--primary-color)', background: 'rgba(163, 184, 142, 0.1)', color: 'var(--primary-color)', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                      <Upload size={16} /> Importar
+              
+              {/* Seletor de Veículos Horizontal */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflowX: 'auto', paddingBottom: '10px' }}>
+                {formData.veiculos.map((v, idx) => (
+                  <div key={idx} style={{ position: 'relative' }}>
+                    <button 
+                      type="button"
+                      onClick={() => setVeiculoIndex(idx)}
+                      style={{
+                        padding: '10px 16px',
+                        borderRadius: '12px',
+                        border: '1px solid',
+                        borderColor: veiculoIndex === idx ? 'var(--primary-color)' : 'rgba(255,255,255,0.1)',
+                        background: veiculoIndex === idx ? 'rgba(var(--primary-rgb), 0.1)' : 'rgba(0,0,0,0.2)',
+                        color: veiculoIndex === idx ? 'var(--primary-color)' : '#888',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        fontWeight: 'bold',
+                        fontSize: '13px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}
+                    >
+                      <Car size={16} /> 
+                      {v.modelo || `Veículo ${idx + 1}`}
+                      {v.placa && ` (${v.placa})`}
                     </button>
-                    <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/*" style={{ display: 'none' }} />
+                    {formData.veiculos.length > 1 && (
+                      <button 
+                        type="button" 
+                        onClick={(e) => { e.stopPropagation(); removerVeiculo(idx); }}
+                        style={{ position: 'absolute', top: '-8px', right: '-8px', width: '20px', height: '20px', borderRadius: '50%', background: '#dc2626', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <X size={12} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button 
+                  type="button" 
+                  onClick={addNovoVeiculo}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '12px', border: '1px dashed #555', background: 'transparent', color: '#888', cursor: 'pointer', fontSize: '13px', whiteSpace: 'nowrap' }}
+                >
+                  <Plus size={16} /> Adicionar Veículo
+                </button>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Tipo</label>
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '8px 12px' }}>
+                      <select name="tipo" value={currentVeiculo.tipo} onChange={handleVeiculoChange}
+                        style={{ background: 'transparent', border: 'none', color: 'white', width: '100%', outline: 'none', cursor: 'pointer' }}>
+                        <option value="carro" style={{ background: '#222' }}>Carro</option>
+                        <option value="moto" style={{ background: '#222' }}>Moto</option>
+                        <option value="outros" style={{ background: '#222' }}>Outros</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Marca / Fabricante</label>
+                    <input type="text" name="marca" value={currentVeiculo.marca || ''} onChange={handleVeiculoChange}
+                      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: BMW, Honda" />
                   </div>
                 </div>
 
-                {formData.veiculo.foto && (
-                  <div style={{ marginTop: '10px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', width: '100px', height: '100px' }}>
-                    <img src={formData.veiculo.foto} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Modelo / Versão</label>
+                    <input type="text" name="modelo" value={currentVeiculo.modelo || ''} onChange={handleVeiculoChange}
+                      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: 320i / Hornet" />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Placa</label>
+                      <input type="text" name="placa" value={currentVeiculo.placa || ''} onChange={handleVeiculoChange}
+                        style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="ABC1D23" />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Ano</label>
+                      <input type="number" name="ano" value={currentVeiculo.ano || ''} onChange={handleVeiculoChange}
+                        style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="2023" />
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Cor Predominante</label>
+                    <input type="text" name="cor" value={currentVeiculo.cor || ''} onChange={handleVeiculoChange}
+                      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '12px', color: 'white', width: '100%', outline: 'none' }} placeholder="Ex: Azul / Preto" />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Foto do Veículo</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '10px' }}>
+                        <Camera size={18} color="#888" style={{ marginRight: '10px' }} />
+                        <input type="text" name="foto" value={(currentVeiculo.foto && currentVeiculo.foto.startsWith('data:')) ? 'Imagem ✓' : (currentVeiculo.foto || '')} onChange={handleVeiculoChange}
+                          style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }} placeholder="URL da foto" />
+                      </div>
+                      <button type="button" onClick={triggerFileInput} style={{ padding: '0 12px', borderRadius: '8px', border: '1px solid var(--primary-color)', background: 'transparent', color: 'var(--primary-color)', cursor: 'pointer' }}>
+                        <Upload size={16} />
+                      </button>
+                      <input type="file" ref={fileInputRef} onChange={handlePhotoUpload} accept="image/*" style={{ display: 'none' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {currentVeiculo.foto && (
+                  <div style={{ marginBottom: '20px', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', width: '120px', height: '120px' }}>
+                    <img src={currentVeiculo.foto} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 )}
-              </div>
 
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Relatório de Avarias / Observações Técnicas</label>
-                <div style={{ display: 'flex', alignItems: 'flex-start', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(220, 38, 38, 0.2)', borderRadius: '8px', padding: '10px' }}>
-                  <AlertTriangle size={18} color="#dc2626" style={{ marginRight: '10px', marginTop: '4px' }} />
-                  <textarea name="avarias" value={formData.veiculo.avarias || ''} onChange={handleVeiculoChange}
-                    style={{ border: 'none', background: 'transparent', color: '#ffbaba', width: '100%', outline: 'none', minHeight: '80px', resize: 'vertical' }} placeholder="Descreva riscos, amassados ou pontos de atenção sobre o estado do veículo..." />
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '13px' }}>Relatório de Avarias</label>
+                  <textarea name="avarias" value={currentVeiculo.avarias || ''} onChange={handleVeiculoChange}
+                    style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(220, 38, 38, 0.2)', borderRadius: '8px', padding: '12px', color: '#ffbaba', width: '100%', outline: 'none', minHeight: '80px' }} placeholder="Descrições técnicas de riscos, batidas, etc..." />
                 </div>
               </div>
             </div>

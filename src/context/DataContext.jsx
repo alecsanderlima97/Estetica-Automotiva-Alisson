@@ -243,6 +243,18 @@ export const DataProvider = ({ children }) => {
 
   // Efeito para migrar/corrigir categorias nos serviços salvos
   useEffect(() => {
+    // Migra clientes para múltiplos veículos se necessário
+    const precisaMigrarVeiculos = clientes.some(c => c.veiculo && !c.veiculos);
+    if (precisaMigrarVeiculos) {
+      setClientes(prev => prev.map(c => {
+        if (c.veiculo && !c.veiculos) {
+          const { veiculo, ...rest } = c;
+          return { ...rest, veiculos: [{ ...veiculo, id: Date.now() + Math.random() }] };
+        }
+        return c;
+      }));
+    }
+
     const precisaAjustar = servicos.some(s => !s.categoria || (s.nome === 'Limpeza Técnica' && s.categoria === 'MOTOR'));
     
     if (precisaAjustar) {

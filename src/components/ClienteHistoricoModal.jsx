@@ -59,6 +59,9 @@ const ClienteHistoricoModal = ({ isOpen, onClose, cliente, agendamentos }) => {
                   <div style={{ fontWeight: 'bold', color: 'white', fontSize: '15px' }}>{a.servico}</div>
                   <div style={{ fontSize: '12px', color: '#888' }}>{a.dataStr} • {a.horario}</div>
                 </div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '4px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--primary-color)', fontWeight: 'bold' }}>{a.veiculo || 'Veículo não informado'}</div>
+                </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
                   <div style={{ fontSize: '13px', color: '#666' }}>Valor: R$ {a.valor?.toLocaleString('pt-BR')}</div>
                   <div className={`status ${a.status === 'Confirmado' || a.status === 'Concluído' ? 'concluido' : a.status === 'Cancelado' ? 'cancelado' : 'agendado'}`} style={{ fontSize: '10px' }}>

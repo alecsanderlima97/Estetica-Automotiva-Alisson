@@ -100,15 +100,6 @@ const Dashboard = () => {
             {privacidade ? <Eye size={18} /> : <EyeOff size={18} />}
           </button>
           
-          <button 
-            className="action-btn" 
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)' }} 
-            onClick={() => window.print()}
-            title="Gerar PDF / Imprimir"
-          >
-            <Printer size={18} /> Imprimir
-          </button>
-
           <button className="action-btn" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }} onClick={() => navigate('/clientes')}>
             <Users size={18} /> Clientes
           </button>
@@ -219,7 +210,7 @@ const Dashboard = () => {
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '14px', color: 'white', fontWeight: '500' }}>{c.nome}</div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>{c.veiculo?.modelo || "Cliente Premium"}</div>
+                      <div style={{ fontSize: '12px', color: '#888' }}>{c.veiculos?.[0]?.modelo || c.veiculo?.modelo || "Cliente Premium"}</div>
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button 

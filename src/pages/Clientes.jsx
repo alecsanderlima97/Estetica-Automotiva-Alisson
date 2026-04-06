@@ -93,11 +93,20 @@ const Clientes = () => {
               {clientesFiltrados.map((cliente) => (
                 <tr key={cliente.id}>
                   <td style={{ fontWeight: '500' }}>{cliente.nome}</td>
-                  <td>{cliente.veiculo?.modelo || 'Não cadastrado'}</td>
-                  <td style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>{cliente.veiculo?.placa || '---'}</td>
+                  <td>
+                    {cliente.veiculos?.[0]?.modelo || cliente.veiculo?.modelo || 'Não cadastrado'}
+                    {cliente.veiculos?.length > 1 && (
+                      <span style={{ fontSize: '10px', color: 'var(--primary-color)', marginLeft: '6px', background: 'rgba(var(--primary-rgb), 0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                        +{cliente.veiculos.length - 1} veíc.
+                      </span>
+                    )}
+                  </td>
+                  <td style={{ fontWeight: 'bold', color: 'var(--primary-color)' }}>
+                    {cliente.veiculos?.[0]?.placa || cliente.veiculo?.placa || '---'}
+                  </td>
                   <td>
                     <span className="status agendado" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6' }}>
-                      {cliente.veiculo?.marca || 'Geral'}
+                      {cliente.veiculos?.[0]?.marca || cliente.veiculo?.marca || 'Geral'}
                     </span>
                   </td>
                   <td style={{ textAlign: 'right' }}>
