@@ -376,7 +376,19 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
             </div>
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            gap: '12px',
+            position: 'sticky',
+            bottom: '-32px', // Ajustado para o padding do modal
+            backgroundColor: 'rgba(34, 43, 25, 0.95)',
+            backdropFilter: 'blur(10px)',
+            padding: '20px 0 0 0',
+            marginTop: '20px',
+            borderTop: '1px solid rgba(255,255,255,0.05)',
+            zIndex: 10
+          }}>
             <button type="button" onClick={onClose} style={{ padding: '12px 24px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#888', cursor: 'pointer', fontWeight: '600' }}>
               FECHAR
             </button>

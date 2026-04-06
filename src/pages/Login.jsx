@@ -17,24 +17,29 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulação de autenticação com senha local
-    const savedPass = localStorage.getItem('alisson_admin_pass') || 'admin';
+    // Lista de usuários autorizados
+    const authorizedUsers = [
+      { email: 'alisson@estetica.com', password: '123', name: 'Alisson Detailing', role: 'admin' },
+      { email: 'suporte@estetica.com', password: 'dev', name: 'Suporte Técnico', role: 'dev' }
+    ];
+
+    const matchedUser = authorizedUsers.find(u => u.email === email && u.password === password);
     
     setTimeout(() => {
-      if (password === savedPass) {
+      if (matchedUser) {
         // Toca o som de entrada
         playLoginSound().catch(e => console.log("Erro ao tocar som:", e));
         
         // Aguarda animação antes de entrar
         setTimeout(() => {
-          onLogin({ name: 'Alisson Detailing', role: 'admin' });
+          onLogin(matchedUser);
           setLoading(false);
         }, 1500);
       } else {
-        alert('Senha incorreta! (Dica padrão: admin)');
+        alert('Credenciais incorretas! Verifique seu e-mail e senha.');
         setLoading(false);
       }
-    }, 500);
+    }, 800);
   };
 
   return (

@@ -518,8 +518,20 @@ const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
             </div>
           )}
 
-          <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-            <button type="button" onClick={onClose} style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#888', cursor: 'pointer' }}>
+          <div style={{ 
+            marginTop: '24px', 
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            gap: '12px',
+            position: 'sticky',
+            bottom: '-1px', 
+            backgroundColor: 'rgba(34, 43, 25, 0.95)',
+            backdropFilter: 'blur(12px)',
+            padding: '24px 0 0 0',
+            borderTop: '1px solid rgba(255,255,255,0.05)',
+            zIndex: 100
+          }}>
+            <button type="button" onClick={onClose} style={{ padding: '12px 24px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#888', cursor: 'pointer', fontWeight: '600' }}>
               CANCELAR
             </button>
             <button type="submit" className="action-btn" style={{ padding: '12px 35px', background: 'var(--primary-color)', color: 'white', border: 'none', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 4px 15px rgba(var(--primary-rgb), 0.3)' }}>
