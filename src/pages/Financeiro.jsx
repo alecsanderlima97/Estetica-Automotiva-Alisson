@@ -15,7 +15,7 @@ const Financeiro = () => {
 
   const totalReceitasManuais = financeiro
     .filter(l => {
-      const d = new Date(l.data);
+      const d = new Date(l.data + 'T12:00:00');
       return l.tipo === 'receita' && d.getMonth() === filtroMes && d.getFullYear() === filtroAno;
     })
     .reduce((acc, curr) => acc + curr.valor, 0);
@@ -30,7 +30,7 @@ const Financeiro = () => {
         m = parseInt(partes[1]) - 1;
         y = parseInt(partes[2]);
       } else {
-        const d = new Date(a.dataStr);
+        const d = new Date((a.data || a.dataStr.split('/').reverse().join('-')) + 'T12:00:00');
         m = d.getMonth();
         y = d.getFullYear();
       }
@@ -42,7 +42,7 @@ const Financeiro = () => {
   
   const totalDespesas = financeiro
     .filter(l => {
-      const d = new Date(l.data);
+      const d = new Date(l.data + 'T12:00:00');
       return l.tipo === 'despesa' && d.getMonth() === filtroMes && d.getFullYear() === filtroAno;
     })
     .reduce((acc, curr) => acc + curr.valor, 0);
@@ -56,14 +56,14 @@ const Financeiro = () => {
       .filter(a => a.status !== 'Cancelado')
       .map(a => ({
         id: `ag-${a.id}`,
-        data: a.dataStr.includes('/') ? a.dataStr.split('/').reverse().join('-') : a.dataStr,
+        data: a.data || (a.dataStr.includes('/') ? a.dataStr.split('/').reverse().join('-') : a.dataStr),
         descricao: `Atendimento: ${a.cliente} (${a.servico})`,
         valor: a.valor || 0,
         tipo: 'receita',
         origem: 'agenda'
       }))
   ].filter(l => {
-    const dataLancamento = new Date(l.data);
+    const dataLancamento = new Date(l.data + 'T12:00:00');
     const mesMatch = dataLancamento.getMonth() === filtroMes && dataLancamento.getFullYear() === filtroAno;
     const tipoMatch = filtroTipo === 'todos' || l.tipo === filtroTipo;
     return mesMatch && tipoMatch;
@@ -210,7 +210,7 @@ const Financeiro = () => {
             <tbody>
               {lancamentosExibidos.sort((a, b) => new Date(b.data) - new Date(a.data)).map((lancamento) => (
                 <tr key={lancamento.id}>
-                  <td style={{ color: '#888' }}>{new Date(lancamento.data).toLocaleDateString('pt-BR')}</td>
+                  <td style={{ color: '#888' }}>{new Date(lancamento.data + 'T12:00:00').toLocaleDateString('pt-BR')}</td>
                   <td>
                     <div style={{ fontWeight: '500', color: 'var(--text-light)' }}>{lancamento.descricao}</div>
                     {lancamento.origem === 'agenda' && <span style={{ fontSize: '10px', color: 'var(--primary-color)', opacity: 0.8 }}>vinda da Agenda</span>}

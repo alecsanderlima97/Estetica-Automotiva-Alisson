@@ -62,7 +62,7 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
             <tbody>
               {lancamentos.map((l, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid #efefef' }}>
-                  <td style={{ padding: '12px', fontSize: '13px' }}>{new Date(l.data).toLocaleDateString('pt-BR')}</td>
+                  <td style={{ padding: '12px', fontSize: '13px' }}>{new Date(l.data + 'T12:00:00').toLocaleDateString('pt-BR')}</td>
                   <td style={{ padding: '12px', fontSize: '13px' }}>
                     <div style={{ fontWeight: '600' }}>{l.descricao}</div>
                     {l.origem === 'agenda' && <span style={{ fontSize: '10px', color: '#999' }}>Vindo da agenda</span>}

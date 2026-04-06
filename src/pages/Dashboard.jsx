@@ -43,7 +43,7 @@ const Dashboard = () => {
 
   const totalReceitasManuais = financeiro
     .filter(f => {
-      const d = new Date(f.data);
+      const d = new Date(f.data + 'T12:00:00');
       return f.tipo === 'receita' && d.getMonth() === mesAtual && d.getFullYear() === anoAtual;
     })
     .reduce((acc, curr) => acc + curr.valor, 0);
@@ -61,7 +61,7 @@ const Dashboard = () => {
           return false;
         }
       } else {
-        const d = new Date(a.dataStr);
+        const d = new Date((a.data || a.dataStr.split('/').reverse().join('-')) + 'T12:00:00');
         m = d.getMonth();
         y = d.getFullYear();
       }
@@ -71,7 +71,7 @@ const Dashboard = () => {
   
   const totalSaidas = financeiro
     .filter(f => {
-      const d = new Date(f.data);
+      const d = new Date(f.data + 'T12:00:00');
       return f.tipo === 'despesa' && d.getMonth() === mesAtual && d.getFullYear() === anoAtual;
     })
     .reduce((acc, curr) => acc + curr.valor, 0);
