@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Save, User, Phone, Mail, MapPin, Instagram, Car, Cake, Camera, AlertTriangle, Truck, Upload } from 'lucide-react';
+import { X, Save, User, Phone, Mail, MapPin, Instagram, Car, Cake, Camera, AlertTriangle, Truck, Upload, Plus } from 'lucide-react';
 import { useData } from '../context/DataContext';
 
 const ClienteFormModal = ({ isOpen, onClose, clienteParaEditar, onSalvar }) => {
