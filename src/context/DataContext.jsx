@@ -29,133 +29,133 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_v3', [
+  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_final', [
     { 
       id: 1, 
-      nome: 'Limpeza técnica', 
+      nome: 'Limpeza Técnica', 
       preco: 150, 
       tempoEstimado: '3h', 
-      descricao: 'limpeza interna e externa , selante no peneus , proteção nos plásticos internos , Proteção nas caixa de rodas , + selante na pintura .',
+      descricao: 'Limpeza interna e externa detalhada, com aplicação de selante nos pneus, proteção nos plásticos internos, proteção nas caixas de rodas e selante na pintura.',
       categorias: [{ nome: 'Médio', valor: 180 }, { nome: 'Grande / SUV', valor: 220 }]
     },
     { 
       id: 2, 
-      nome: 'Limpeza detalhada', 
+      nome: 'Limpeza Detalhada', 
       preco: 250, 
       tempoEstimado: '5h', 
-      descricao: 'limpeza detalhada intena e externa , detalhamento em emblemas ,maçanetas , retrovisores, proteção em caixa de rodas , selante em peneus , proteção na pintura enceramento na máquina + brinde lixo car , 1 aromatizante personalizado incluso limpeza interna e externa detalhada , descontaminação dos plásticos , descontaminação dos bancos de couro ou estofados , revitalização plásticos internos e externos , enceramento na máquina na pintura , detalhamento em todos os emblemas , + brindes lixo car + aromatizante personalizado.',
+      descricao: 'Limpeza interna e externa minuciosa com detalhamento em emblemas, maçanetas e retrovisores. Inclui proteção em caixas de rodas, selante nos pneus e proteção de pintura com enceramento à máquina. Realizamos descontaminação de plásticos, bancos e estofados, revitalização de plásticos internos e externos. Brindes: lixo car + 1 aromatizante personalizado.',
       categorias: [{ nome: 'Médio', valor: 300 }, { nome: 'Grande / SUV', valor: 350 }]
     },
     { 
       id: 3, 
-      nome: 'Limpeza completa detalhada incluso motor + chassis com proteção contra oxidação ferrugem.', 
+      nome: 'Limpeza Completa Detalhada (Motor + Chassi)', 
       preco: 300, 
       tempoEstimado: '6h', 
-      descricao: 'Limpeza completa detalhada incluso motor + chassis com proteção contra oxidação ferrugem.',
+      descricao: 'Incluso limpeza detalhada de motor e chassi, com aplicação de proteção técnica contra oxidação e ferrugem.',
       categorias: [{ nome: 'Médio', valor: 350 }, { nome: 'Grande / SUV', valor: 400 }]
     },
     { 
       id: 4, 
-      nome: 'Higienização completa', 
+      nome: 'Higienização Completa', 
       preco: 800, 
       tempoEstimado: '8h', 
-      descricao: 'Remoção dos bancos , carpetes , borrachas incluso troca de filtro ar condicionado com a limpeza + acabamento com as proteção interna e externa , + brindes .',
+      descricao: 'Remoção técnica de bancos, carpetes e borrachas. Incluso troca do filtro de ar-condicionado, limpeza profunda e acabamento com proteção interna e externa + brindes exclusivos.',
       categorias: [{ nome: 'Médio', valor: 950 }, { nome: 'Grande / SUV', valor: 1100 }]
     },
     { 
       id: 5, 
-      nome: 'Limpeza de ar condicionado incluso filtro , + granada', 
+      nome: 'Limpeza de Ar-condicionado', 
       preco: 150, 
       tempoEstimado: '1h', 
-      descricao: 'Limpeza de ar condicionado incluso filtro , + granada',
+      descricao: 'Limpeza técnica do sistema com substituição do filtro e aplicação de granada higienizadora.',
       categorias: []
     },
     { 
       id: 6, 
-      nome: 'Restauração de faróis', 
+      nome: 'Restauração de Faróis', 
       preco: 260, 
       tempoEstimado: '2h', 
-      descricao: 'Incluso lixamento técnico na máquina , + proteção em polímero contra raios solares UV , durabilidade com garantia de 2 anos .',
+      descricao: 'Incluso lixamento técnico à máquina e aplicação de proteção em polímero contra raios solares UV. Durabilidade com garantia de 2 anos.',
       categorias: []
     },
     { 
       id: 7, 
-      nome: 'Higienização de bancos avulsos', 
+      nome: 'Higienização de Bancos Avulsos', 
       preco: 300, 
       tempoEstimado: '3h', 
-      descricao: 'Estofados',
+      descricao: 'Processo de higienização profunda para bancos em estofados ou tecidos.',
       categorias: []
     },
     { 
       id: 8, 
-      nome: 'Limpeza externa com proteção na pintura , selante no peneus , limpeza do tapetes .', 
+      nome: 'Limpeza Externa com Proteção', 
       preco: 80, 
       tempoEstimado: '1h', 
-      descricao: 'Limpeza externa com proteção na pintura , selante no peneus , limpeza do tapetes .',
+      descricao: 'Lavagem externa com proteção na pintura, aplicação de selante nos pneus e limpeza técnica dos tapetes.',
       categorias: [{ nome: 'Médio', valor: 100 }, { nome: 'Grande / SUV', valor: 120 }]
     },
     { 
       id: 9, 
-      nome: 'Instalação de som automotivo', 
+      nome: 'Instalação de Som Automotivo', 
       preco: 0, 
       tempoEstimado: '---', 
-      descricao: 'Levar até a loja pra fazer o orçamento .',
+      descricao: 'Instalação profissional de sistemas de som. Favor levar o veículo até a loja para a realização do orçamento.',
       categorias: []
     },
     { 
       id: 10, 
-      nome: 'Polimento técnico na pintura + limpeza interna e externa,', 
+      nome: 'Polimento Técnico', 
       preco: 800, 
       tempoEstimado: '10h', 
-      descricao: 'Proteção em todas superfície do veículo + brinde personalizado',
+      descricao: 'Polimento técnico na pintura com limpeza interna e externa completa. Inclui proteção em todas as superfícies do veículo e brinde personalizado.',
       categorias: [{ nome: 'Médio', valor: 1000 }, { nome: 'Grande / SUV', valor: 1300 }]
     },
     { 
       id: 11, 
-      nome: 'Polímento comercial apenas remoção de riscos + brilho no verniz , acompanha limpeza externa .', 
+      nome: 'Polimento Comercial', 
       preco: 500, 
       tempoEstimado: '6h', 
-      descricao: 'Polímento comercial apenas remoção de riscos + brilho no verniz , acompanha limpeza externa .',
+      descricao: 'Focado na remoção de riscos superficiais e restauração do brilho no verniz. Acompanha limpeza externa detalhada.',
       categorias: [{ nome: 'Médio', valor: 650 }, { nome: 'Grande / SUV', valor: 800 }]
     },
     { 
       id: 12, 
-      nome: 'Polimento em motos incluso limpeza técnica + proteção nos plásticos selante nos peneus , limpeza dos kits relação', 
+      nome: 'Polimento em Motos', 
       preco: 300, 
       tempoEstimado: '4h', 
-      descricao: 'Polimento em motos incluso limpeza técnica + proteção nos plásticos selante nos peneus , limpeza dos kits relação',
+      descricao: 'Incluso limpeza técnica detalhada, proteção nos plásticos, selante nos pneus e limpeza técnica do kit relação.',
       categorias: []
     },
     { 
       id: 13, 
-      nome: 'Vitrificação na pintura do carro ou moto', 
+      nome: 'Vitrificação de Pintura (Carro ou Moto)', 
       preco: 1000, 
       tempoEstimado: '12h', 
-      descricao: 'Proteção de 3 anos com garantia',
-      categorias: [{ nome: 'Moto', valor: 500 }]
+      descricao: 'Proteção de alta performance com garantia de 3 anos. (Moto: R$ 500,00 | Carro: R$ 1.000,00).',
+      categorias: [{ nome: 'SUV / Grande', valor: 1400 }]
     },
     { 
       id: 14, 
-      nome: 'Limpeza técnica de motos', 
+      nome: 'Limpeza Técnica de Motos', 
       preco: 130, 
       tempoEstimado: '2h', 
-      descricao: 'Proteção com verniz de motor , selante na pintura , selante peneus , revitalização nos plásticos + brinde',
+      descricao: 'Proteção com verniz de motor, selante na pintura e nos pneus, revitalização de plásticos + brinde.',
       categorias: []
     },
     { 
       id: 15, 
-      nome: 'Limpeza detalhada motos', 
+      nome: 'Limpeza Detalhada de Motos', 
       preco: 220, 
       tempoEstimado: '4h', 
-      descricao: 'Detalhamento nas relações Remoções das carenagem com maior aceso de limpeza , proteção no peneus , proteção na pintura Proteção no motor com verniz contra oxidação, revitalização nos plásticos',
+      descricao: 'Detalhamento das relações e remoção das carenagens para maior acesso à limpeza. Inclui proteção nos pneus, pintura e motor com verniz contra oxidação, além de revitalização de plásticos.',
       categorias: []
     },
     { 
       id: 16, 
-      nome: 'Remoção chuva ácidas vidros', 
+      nome: 'Remoção de Chuva Ácida nos Vidros', 
       preco: 100, 
       tempoEstimado: '2h', 
-      descricao: 'Maior visibilidade possível',
+      descricao: 'Tratamento nos vidros para garantir a maior visibilidade possível e segurança ao dirigir.',
       categorias: []
     }
   ]));
@@ -195,7 +195,7 @@ export const DataProvider = ({ children }) => {
 
   // Efeito para salvar no localStorage
   useEffect(() => {
-    localStorage.setItem('alisson_servicos_v3', JSON.stringify(servicos));
+    localStorage.setItem('alisson_servicos_final', JSON.stringify(servicos));
     localStorage.setItem('alisson_clientes', JSON.stringify(clientes));
     localStorage.setItem('alisson_agendamentos', JSON.stringify(agendamentos));
     localStorage.setItem('alisson_estoque', JSON.stringify(estoque));
