@@ -196,8 +196,15 @@ export const DataProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => getInitialData('alisson_theme', 'premium'));
 
   const [userProfile, setUserProfile] = useState(() => getInitialData('alisson_user', { 
-    nome: 'Alisson', 
+    nome: 'Alisson Henrique Rodrigues de Campos', 
     cargo: 'Proprietário', 
+    cpf: '484.130.698-66',
+    nascimento: '27/04/1999',
+    endereco: 'Rua Ângelo Santos Penteado, 186',
+    email: 'walissonrodrigues1055@gmail.com',
+    telefone: '+55 (15) 99767-5822',
+    cnpj: '42.563.724/0001-93',
+    instagram: '@Alisson.est_automotiva',
     foto: null 
   }));
 

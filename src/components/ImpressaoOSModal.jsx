@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import { X, Printer, Car, User, Clock, CheckCircle, Shield, AlertCircle, Phone, MapPin, QrCode, FileCheck, Info, CreditCard } from 'lucide-react';
+import { useData } from '../context/DataContext';
 
 const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
   const iframeRef = useRef(null);
+  const { userProfile } = useData();
 
   if (!isOpen || !agendamento) return null;
 
@@ -65,7 +67,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px', zIndex: 2001 }}>
         <button 
           onClick={() => {
-            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.id.toString().padStart(4, '0')}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || ''}%0A*Placa:* ${cliente?.veiculo?.placa || agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema._`;
+            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.id.toString().padStart(4, '0')}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${cliente?.veiculo?.marca || ''} ${cliente?.veiculo?.modelo || ''}%0A*Placa:* ${cliente?.veiculo?.placa || agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
             const phone = (cliente?.telefone || agendamento.telefone || '').replace(/\D/g, '');
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg.replace(/%0A/g, '\n'))}`, '_blank');
           }}
@@ -94,8 +96,6 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
         fontFamily: "'Inter', sans-serif",
         position: 'relative'
       }}>
-        {/* Design Eco-Friendly: Sem Marca D'água para economizar tinta */}
-
         {/* Cabeçalho Minimalista */}
         <div style={{ borderBottom: '2px solid #000', paddingBottom: '20px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -104,7 +104,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
              </div>
              <div>
                <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
-               <p style={{ margin: 0, fontSize: '11px', color: '#000' }}>Rua das Garagens, 123 - Centro | Contato: (15) 99677-5714</p>
+               <p style={{ margin: 0, fontSize: '10px', color: '#000', fontWeight: '500' }}>{userProfile.endereco} | CNPJ: {userProfile.cnpj} | {userProfile.telefone}</p>
              </div>
           </div>
           <div style={{ textAlign: 'right' }}>
@@ -117,7 +117,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
           </div>
         </div>
 
-        {/* Informações Planas (Sem Backgrounds pesados) */}
+        {/* Informações Planas */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
           <div style={{ padding: '15px', border: '1px solid #000', borderRadius: '8px' }}>
             <div style={{ fontSize: '10px', fontWeight: '900', marginBottom: '5px', textTransform: 'uppercase' }}>Proprietário</div>
@@ -158,7 +158,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
           </table>
         </div>
 
-        {/* Checklist com Bordas Finas */}
+        {/* Checklist */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
           <div style={{ padding: '15px', border: '1px solid #000', borderRadius: '8px' }}>
             <h3 style={{ margin: '0 0 10px 0', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase' }}>Checklist de Entrada</h3>
