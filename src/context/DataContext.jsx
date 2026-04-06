@@ -29,7 +29,7 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos', [
+  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_v2', [
     { 
       id: 1, 
       nome: 'Limpeza Técnica (Standard)', 
@@ -195,7 +195,7 @@ export const DataProvider = ({ children }) => {
 
   // Efeito para salvar no localStorage
   useEffect(() => {
-    localStorage.setItem('alisson_servicos', JSON.stringify(servicos));
+    localStorage.setItem('alisson_servicos_v2', JSON.stringify(servicos));
     localStorage.setItem('alisson_clientes', JSON.stringify(clientes));
     localStorage.setItem('alisson_agendamentos', JSON.stringify(agendamentos));
     localStorage.setItem('alisson_estoque', JSON.stringify(estoque));
