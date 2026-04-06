@@ -18,9 +18,11 @@ const Login = ({ onLogin }) => {
     setLoading(true);
     
     // Lista de usuários autorizados conforme solicitado pelo desenvolvedor
+    const savedAlissonPass = localStorage.getItem('alisson_admin_pass') || 'admin';
+    
     const authorizedUsers = [
-      { email: 'walissonrodrigues1055@gmail.com', password: 'ADMIN', name: 'Alisson Detailing', role: 'admin' },
-      { email: 'orquestracs@gmail.com', password: 'ADMIN', name: 'Suporte Técnico', role: 'dev' }
+      { email: 'walissonrodrigues1055@gmail.com', password: savedAlissonPass, name: 'Alisson Detailing', role: 'admin' },
+      { email: 'orquestracs@gmail.com', password: 'admin', name: 'Suporte Técnico', role: 'dev' }
     ];
 
     const matchedUser = authorizedUsers.find(u => u.email === email && u.password === password);
