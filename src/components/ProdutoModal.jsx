@@ -7,7 +7,9 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
     categoria: '',
     quantidade: '',
     minimo: '',
-    unidade: 'un'
+    unidade: 'un',
+    dataEntrada: '',
+    dataSaida: ''
   });
 
   useEffect(() => {
@@ -18,7 +20,9 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
           categoria: produtoParaEditar.categoria,
           quantidade: produtoParaEditar.quantidade.toString(),
           minimo: produtoParaEditar.minimo.toString(),
-          unidade: produtoParaEditar.unidade || 'un'
+          unidade: produtoParaEditar.unidade || 'un',
+          dataEntrada: produtoParaEditar.dataEntrada || '',
+          dataSaida: produtoParaEditar.dataSaida || ''
         });
       } else {
         setFormData({
@@ -26,7 +30,9 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
           categoria: '',
           quantidade: '',
           minimo: '',
-          unidade: 'un'
+          unidade: 'un',
+          dataEntrada: new Date().toISOString().split('T')[0],
+          dataSaida: ''
         });
       }
     }
@@ -49,7 +55,7 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
       backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
     }}>
-      <div className="card" style={{ width: '100%', maxWidth: '500px', padding: '32px' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '550px', padding: '32px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 style={{ color: 'var(--text-light)', margin: 0 }}>
             {produtoParaEditar ? 'Editar Produto' : 'Novo Produto'}
@@ -78,24 +84,49 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
             </div>
           </div>
 
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Categoria</label>
-            <input 
-              type="text" 
-              value={formData.categoria}
-              onChange={(e) => setFormData({...formData, categoria: e.target.value})}
-              required
-              placeholder="Ex: Polimento, Lavagem, Limpeza Interna..."
-              style={{ 
-                width: '100%', 
-                background: 'rgba(0,0,0,0.2)', 
-                border: '1px solid rgba(255,255,255,0.05)', 
-                borderRadius: '8px', 
-                padding: '12px', 
-                color: 'var(--text-light)', 
-                outline: 'none' 
-              }}
-            />
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Categoria</label>
+              <input 
+                type="text" 
+                value={formData.categoria}
+                onChange={(e) => setFormData({...formData, categoria: e.target.value})}
+                required
+                placeholder="Ex: Polimento"
+                style={{ 
+                  width: '100%', 
+                  background: 'rgba(0,0,0,0.2)', 
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  color: 'var(--text-light)', 
+                  outline: 'none' 
+                }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Unidade</label>
+              <select 
+                value={formData.unidade}
+                onChange={(e) => setFormData({...formData, unidade: e.target.value})}
+                style={{ 
+                  width: '100%', 
+                  background: 'rgba(0,0,0,0.2)', 
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  color: 'var(--text-light)', 
+                  outline: 'none' 
+                }}
+              >
+                <option value="un">Unidade (un)</option>
+                <option value="l">Litro (L)</option>
+                <option value="ml">Mililitro (ml)</option>
+                <option value="kg">Quilograma (kg)</option>
+                <option value="g">Grama (g)</option>
+                <option value="galão">Galão</option>
+              </select>
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>
@@ -126,6 +157,43 @@ const ProdutoModal = ({ isOpen, onClose, onSalvar, produtoParaEditar }) => {
                   style={{ border: 'none', background: 'transparent', color: 'var(--text-light)', width: '100%', outline: 'none' }}
                 />
               </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Data de Entrada</label>
+              <input 
+                type="date" 
+                value={formData.dataEntrada}
+                onChange={(e) => setFormData({...formData, dataEntrada: e.target.value})}
+                style={{ 
+                  width: '100%', 
+                  background: 'rgba(0,0,0,0.2)', 
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  color: 'var(--text-light)', 
+                  outline: 'none' 
+                }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#ccc', fontSize: '14px' }}>Data de Saída (Última)</label>
+              <input 
+                type="date" 
+                value={formData.dataSaida}
+                onChange={(e) => setFormData({...formData, dataSaida: e.target.value})}
+                style={{ 
+                  width: '100%', 
+                  background: 'rgba(0,0,0,0.2)', 
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  borderRadius: '8px', 
+                  padding: '12px', 
+                  color: 'var(--text-light)', 
+                  outline: 'none' 
+                }}
+              />
             </div>
           </div>
 

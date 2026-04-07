@@ -179,11 +179,11 @@ export const DataProvider = ({ children }) => {
   const [agendamentos, setAgendamentos] = useState(() => getInitialData('alisson_agendamentos', []));
 
   const [estoque, setEstoque] = useState(() => getInitialData('alisson_estoque', [
-    { id: 1, nome: 'Shampoo Automotivo PH Neutro (5L)', categoria: 'Lavagem', quantidade: 3, minimo: 1, unidade: 'galão' },
-    { id: 2, nome: 'Cera de Carnaúba Premium (200g)', categoria: 'Acabamento', quantidade: 5, minimo: 2, unidade: 'un' },
-    { id: 3, nome: 'APC - Limpador Multiuso (5L)', categoria: 'Limpeza Interna', quantidade: 2, minimo: 1, unidade: 'galão' },
-    { id: 4, nome: 'Toalhas de Microfibra 40x40', categoria: 'Acessórios', quantidade: 12, minimo: 20, unidade: 'un' },
-    { id: 5, nome: 'Composto Polidor Corte (1kg)', categoria: 'Polimento', quantidade: 1, minimo: 1, unidade: 'un' }
+    { id: 1, nome: 'Shampoo Automotivo PH Neutro (5L)', categoria: 'Lavagem', quantidade: 3, minimo: 1, unidade: 'galão', dataEntrada: '2026-04-01', dataSaida: '' },
+    { id: 2, nome: 'Cera de Carnaúba Premium (200g)', categoria: 'Acabamento', quantidade: 5, minimo: 2, unidade: 'un', dataEntrada: '2026-04-01', dataSaida: '' },
+    { id: 3, nome: 'APC - Limpador Multiuso (5L)', categoria: 'Limpeza Interna', quantidade: 2, minimo: 1, unidade: 'galão', dataEntrada: '2026-04-01', dataSaida: '' },
+    { id: 4, nome: 'Toalhas de Microfibra 40x40', categoria: 'Acessórios', quantidade: 12, minimo: 20, unidade: 'un', dataEntrada: '2026-04-01', dataSaida: '' },
+    { id: 5, nome: 'Composto Polidor Corte (1kg)', categoria: 'Polimento', quantidade: 1, minimo: 1, unidade: 'un', dataEntrada: '2026-04-01', dataSaida: '' }
   ]));
 
   const [financeiro, setFinanceiro] = useState(() => getInitialData('alisson_financeiro', []));

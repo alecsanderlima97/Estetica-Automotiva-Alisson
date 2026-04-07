@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, Plus, Edit2, Trash2, Search, AlertTriangle } from 'lucide-react';
+import { Package, Plus, Edit2, Trash2, Search, AlertTriangle, Calendar } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ProdutoModal from '../components/ProdutoModal';
 
@@ -8,6 +8,12 @@ const Estoque = () => {
   const [busca, setBusca] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [produtoParaEditar, setProdutoParaEditar] = useState(null);
+
+  const formatarData = (dataStr) => {
+    if (!dataStr) return '-';
+    const [ano, mes, dia] = dataStr.split('-');
+    return `${dia}/${mes}/${ano}`;
+  };
 
   const produtosFiltrados = estoque.filter(p => 
     p.nome.toLowerCase().includes(busca.toLowerCase()) ||
@@ -51,7 +57,7 @@ const Estoque = () => {
         <div className="card" style={{ borderLeft: '4px solid var(--primary-color)' }}>
           <h3 style={{ color: '#888', fontSize: '14px' }}>Itens em Estoque</h3>
           <p style={{ fontSize: '32px', fontWeight: 'bold', marginTop: '8px', color: 'var(--text-light)' }}>
-            {estoque.reduce((acc, curr) => acc + curr.quantidade, 0)}
+            {estoque.reduce((acc, curr) => acc + (parseInt(curr.quantidade) || 0), 0)}
           </p>
         </div>
         <div className="card" style={{ borderLeft: '4px solid #dc2626' }}>
@@ -90,6 +96,8 @@ const Estoque = () => {
                 <th>Produto</th>
                 <th>Categoria</th>
                 <th>Estoque Atual</th>
+                <th>Entrada</th>
+                <th>Saída</th>
                 <th style={{ textAlign: 'center' }}>Status</th>
                 <th style={{ textAlign: 'right' }}>Ações</th>
               </tr>
@@ -107,7 +115,17 @@ const Estoque = () => {
                     <span style={{ fontSize: '16px', fontWeight: 'bold', color: produto.quantidade <= produto.minimo ? '#f87171' : 'var(--text-light)' }}>
                       {produto.quantidade}
                     </span>
-                    <span style={{ fontSize: '12px', color: '#888', marginLeft: '4px' }}>(mín: {produto.minimo} {produto.unidade})</span>
+                    <span style={{ fontSize: '12px', color: '#888', marginLeft: '4px' }}>({produto.unidade})</span>
+                  </td>
+                  <td style={{ fontSize: '13px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ccc' }}>
+                      <Calendar size={14} color="var(--primary-color)" /> {formatarData(produto.dataEntrada)}
+                    </div>
+                  </td>
+                  <td style={{ fontSize: '13px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ccc' }}>
+                      <Calendar size={14} color="#f87171" /> {formatarData(produto.dataSaida)}
+                    </div>
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     {produto.quantidade <= produto.minimo ? (
@@ -134,7 +152,7 @@ const Estoque = () => {
               ))}
               {produtosFiltrados.length === 0 && (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
                     Nenhum produto encontrado no estoque.
                   </td>
                 </tr>
