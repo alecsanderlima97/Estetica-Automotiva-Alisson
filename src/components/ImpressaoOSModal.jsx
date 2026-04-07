@@ -55,14 +55,14 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
   const valorRestante = valorTotal - (agendamento.pagoSinal ? valorSinal : 0);
 
   return (
-    <div className="no-print" style={{
+    <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
       backgroundColor: '#0a0a0a',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2000,
       padding: '20px'
     }}>
-      {/* Botão Voltar no Topo */}
-      <div style={{ width: '100%', maxWidth: '850px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Cabeçalho do Modal - Escondido na impressão */}
+      <div className="no-print" style={{ width: '100%', maxWidth: '850px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button 
           onClick={onClose}
           style={{ 
@@ -233,8 +233,8 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
         </div>
       </div>
 
-      {/* Barra de Ações na Parte Inferior mantida */}
-      <div style={{ 
+      {/* Barra de Ações na Parte Inferior - Escondida na impressão */}
+      <div className="no-print" style={{ 
         width: '100%', maxWidth: '850px', marginTop: '25px', 
         display: 'grid', gridTemplateColumns: '1fr 1.5fr 1.5fr 1.5fr', gap: '15px' 
       }}>
@@ -289,11 +289,12 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
 
       <style>{`
         @media print {
-          .no-print { display: none !important; }
+          body * { visibility: hidden; }
+          #printable-os-preview, #printable-os-preview * { visibility: visible; }
           #printable-os-preview { 
-            position: fixed !important; 
-            top: 0 !important; 
+            position: absolute !important; 
             left: 0 !important; 
+            top: 0 !important; 
             width: 100% !important; 
             max-width: none !important;
             height: auto !important; 
@@ -302,7 +303,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
             box-shadow: none !important;
             overflow: visible !important;
           }
-          body { background: white !important; }
+          .no-print { display: none !important; }
         }
       `}</style>
     </div>
