@@ -351,6 +351,24 @@ export const DataProvider = ({ children }) => {
     setEstoque(prev => prev.filter(p => p.id !== id));
   };
 
+  const movimentarEstoque = (id, quantidade, tipo) => {
+    const hoje = new Date().toISOString().split('T')[0];
+    setEstoque(prev => prev.map(p => {
+      if (p.id === id) {
+        const novaQuantidade = tipo === 'entrada' 
+          ? (parseInt(p.quantidade) || 0) + parseInt(quantidade)
+          : Math.max(0, (parseInt(p.quantidade) || 0) - parseInt(quantidade));
+        
+        return {
+          ...p,
+          quantidade: novaQuantidade,
+          ...(tipo === 'entrada' ? { dataEntrada: hoje } : { dataSaida: hoje })
+        };
+      }
+      return p;
+    }));
+  };
+
   const addLancamento = (lancamento) => {
     setFinanceiro(prev => [...prev, { ...lancamento, id: Date.now() }]);
   };
@@ -404,7 +422,7 @@ export const DataProvider = ({ children }) => {
       clientes, addCliente, updateCliente, deleteCliente,
       agendamentos, addAgendamento, updateAgendamento, updateAgendamentoStatus, deleteAgendamento,
       servicos, addServico, updateServico, deleteServico,
-      estoque, addProduto, updateProduto, deleteProduto,
+      estoque, addProduto, updateProduto, deleteProduto, movimentarEstoque,
       financeiro, addLancamento, updateLancamento, deleteLancamento,
       privacidade, setPrivacidade,
       theme, setTheme,

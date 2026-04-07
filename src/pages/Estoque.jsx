@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Package, Plus, Edit2, Trash2, Search, AlertTriangle, Calendar } from 'lucide-react';
+import { Package, Plus, Edit2, Trash2, Search, AlertTriangle, Calendar, ArrowDownCircle } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ProdutoModal from '../components/ProdutoModal';
+import MovimentacaoModal from '../components/MovimentacaoModal';
 
 const Estoque = () => {
-  const { estoque, addProduto, updateProduto, deleteProduto } = useData();
+  const { estoque, addProduto, updateProduto, deleteProduto, movimentarEstoque } = useData();
   const [busca, setBusca] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMovimentacaoOpen, setIsMovimentacaoOpen] = useState(false);
   const [produtoParaEditar, setProdutoParaEditar] = useState(null);
+  const [produtoParaMovimentar, setProdutoParaMovimentar] = useState(null);
 
   const formatarData = (dataStr) => {
     if (!dataStr) return '-';
@@ -39,6 +42,17 @@ const Estoque = () => {
     if (window.confirm('Tem certeza que deseja excluir este produto?')) {
       deleteProduto(id);
     }
+  };
+
+  const openMovimentacao = (produto) => {
+    setProdutoParaMovimentar(produto);
+    setIsMovimentacaoOpen(true);
+  };
+
+  const handleConfirmMovimentacao = (id, quantidade, tipo) => {
+    movimentarEstoque(id, quantidade, tipo);
+    setIsMovimentacaoOpen(false);
+    setProdutoParaMovimentar(null);
   };
 
   return (
@@ -138,6 +152,12 @@ const Estoque = () => {
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <button 
+                      onClick={() => openMovimentacao(produto)}
+                      title="Registrar Saída/Entrada"
+                      style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', marginRight: '12px' }}>
+                      <ArrowDownCircle size={18} />
+                    </button>
+                    <button 
                       onClick={() => handleEdit(produto)}
                       style={{ background: 'transparent', border: 'none', color: 'var(--secondary-color)', cursor: 'pointer', marginRight: '12px' }}>
                       <Edit2 size={18} />
@@ -167,6 +187,13 @@ const Estoque = () => {
         onClose={() => { setIsModalOpen(false); setProdutoParaEditar(null); }}
         onSalvar={handleSalvar}
         produtoParaEditar={produtoParaEditar}
+      />
+
+      <MovimentacaoModal 
+        isOpen={isMovimentacaoOpen}
+        onClose={() => { setIsMovimentacaoOpen(false); setProdutoParaMovimentar(null); }}
+        onConfirm={handleConfirmMovimentacao}
+        produto={produtoParaMovimentar}
       />
     </div>
   );

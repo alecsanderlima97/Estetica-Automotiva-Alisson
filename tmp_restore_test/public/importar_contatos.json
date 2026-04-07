@@ -1,0 +1,31 @@
+{
+  "valen_clientes": [
+    { "id": 1742055600000, "nome": "Adriele", "telefone": "+55 15 99666-8049", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600001, "nome": "Alice Silva Silva", "telefone": "+55 15 99602-3492", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600002, "nome": "Ana Clara Clara", "telefone": "+55 15 99824-7653", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600003, "nome": "Ana Livia Livia", "telefone": "+55 15 99814-3598", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600004, "nome": "Anna", "telefone": "+55 15 99769-9223", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600005, "nome": "Caah ❤️", "telefone": "+55 15 99649-0604", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600006, "nome": "Dani", "telefone": "+55 15 99758-5725", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600007, "nome": "Dilce ❤️", "telefone": "+55 15 99616-1789", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600008, "nome": "Duda", "telefone": "+55 15 99654-8553", "email": "", "応用visita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600009, "nome": "Edileia", "telefone": "+55 15 99654-1038", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600010, "nome": "Jessica", "telefone": "+55 15 99693-6353", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600011, "nome": "Juliana", "telefone": "+55 15 99686-4785", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600012, "nome": "Karina", "telefone": "+55 15 99631-9055", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600013, "nome": "Keila", "telefone": "+55 15 99693-0710", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600014, "nome": "Lisa", "telefone": "+55 15 99818-5366", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600015, "nome": "Maria Mazetto", "telefone": "+55 15 99861-0141", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600016, "nome": "Michele Alves", "telefone": "+55 15 99790-7804", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600017, "nome": "Mitileny", "telefone": "+55 15 98171-9181", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600018, "nome": "Naty Nicolett", "telefone": "+55 15 99753-9531", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600019, "nome": "Sah Pereitah", "telefone": "+55 15 99732-0695", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600020, "nome": "Sofia Vieira", "telefone": "+55 15 99698-8096", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600021, "nome": "Suzy", "telefone": "+55 15 99746-8112", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600022, "nome": "Tamires Werneck", "telefone": "+55 15 99660-3904", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600023, "nome": "Tânia 😘", "telefone": "+55 15 99816-8997", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600024, "nome": "Vanessa", "telefone": "+55 15 99759-3749", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600025, "nome": "Viviane", "telefone": "+55 15 99745-5542", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" },
+    { "id": 1742055600026, "nome": "yasmim", "telefone": "+55 15 99791-2654", "email": "", "ultVisita": "Novo", "instagram": "", "cpf": "", "cep": "" }
+  ]
+}
