@@ -8,7 +8,8 @@ import {
   Sparkles, 
   DollarSign, 
   Settings, 
-  Calculator as CalcIcon 
+  Calculator as CalcIcon,
+  LogOut
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 
@@ -75,6 +76,28 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
         >
           <CalcIcon size={20} color="var(--primary-color)" />
           <span>Calculadora</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            const confirmBackup = window.confirm("Deseja realizar um backup de segurança (clientes, agenda, estoque, financeiro) antes de sair?");
+            if (confirmBackup) {
+              exportData();
+              // Pequeno delay para garantir que o download inicie antes de deslogar
+              setTimeout(() => {
+                localStorage.removeItem('alissonUser');
+                window.location.reload();
+              }, 1000);
+            } else {
+              localStorage.removeItem('alissonUser');
+              window.location.reload();
+            }
+          }}
+          className="nav-item" 
+          style={{ background: 'rgba(255, 59, 59, 0.05)', border: 'none', cursor: 'pointer', width: '100%', justifyContent: 'flex-start', color: '#ff4d4d' }}
+        >
+          <LogOut size={20} />
+          <span>Sair do Sistema</span>
         </button>
 
         <div style={{ textAlign: 'center', fontSize: '12px', color: '#666', padding: '10px 0' }}>

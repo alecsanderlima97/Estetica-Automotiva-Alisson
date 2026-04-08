@@ -29,6 +29,17 @@ function App() {
     localStorage.setItem('alissonUser', JSON.stringify(userData));
   };
 
+  // Aviso de backup ao fechar a aba
+  React.useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = 'Lembre-se de realizar o backup dos seus dados antes de sair!';
+      return e.returnValue;
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
   if (!user) {
     return <Login onLogin={handleLogin} />;
   }
