@@ -8,7 +8,7 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
   const playLoginSound = () => {
-    const audio = new Audio('/login_sound.mp3');
+    const audio = new Audio('/login_sound.mp3?v=' + Date.now());
     audio.volume = 0.7;
     return audio.play();
   };

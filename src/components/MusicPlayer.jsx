@@ -10,7 +10,7 @@ const MusicPlayer = () => {
   const audioRef = useRef(null);
   
   // Agora usando o arquivo LOCAL que baixamos para o projeto
-  const musicUrl = "/bg-music.mp3";
+  const musicUrl = "/bg-music.mp3?v=" + Date.now();
 
   useEffect(() => {
     if (audioRef.current) {
