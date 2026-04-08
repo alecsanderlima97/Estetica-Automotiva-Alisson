@@ -37,6 +37,40 @@ const Calculator = ({ onClose }) => {
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging]);
+  
+  // Suporte ao Teclado
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Números
+      if (/[0-9]/.test(e.key)) {
+        handleNumber(e.key);
+      }
+      // Operadores
+      else if (['+', '-', '*', '/'].includes(e.key)) {
+        handleOperator(e.key);
+      }
+      // Ponto/Vírgula
+      else if (e.key === '.' || e.key === ',') {
+        handleNumber('.');
+      }
+      // Enter para calcular
+      else if (e.key === 'Enter') {
+        e.preventDefault();
+        calculate();
+      }
+      // Backspace para apagar
+      else if (e.key === 'Backspace') {
+        setDisplay(prev => prev.length > 1 ? prev.slice(0, -1) : '0');
+      }
+      // Esc para limpar (C)
+      else if (e.key === 'Escape') {
+        clear();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [display, equation]); // Dependências necessárias para as funções de cálculo acessarem o estado atual
 
   const handleNumber = (n) => {
     if (display === '0') setDisplay(n.toString());
