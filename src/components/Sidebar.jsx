@@ -25,8 +25,8 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="brand-title" style={{ fontFamily: 'sans-serif', textTransform: 'none', letterSpacing: 'normal', textAlign: 'left' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', opacity: 0.8, filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.2))' }}>
+      <div className="brand-title" style={{ fontFamily: 'sans-serif', textTransform: 'none', letterSpacing: 'normal', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', opacity: 0.8, filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.2))', justifyContent: 'center' }}>
           <span style={{ color: '#3b82f6', fontWeight: '900', fontSize: '36px', letterSpacing: '-1px' }}>O</span>
           <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold', fontSize: '22px', letterSpacing: '0.5px' }}>rquestra.cs</span>
         </div>

@@ -37,7 +37,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <div className="footer-legal">
-            <p>© {currentYear} Alisson Estética Automotiva. Licenciado para Alisson.</p>
+            <p>© {currentYear} Alisson Estética Automotiva.</p>
             <div className="footer-legal-tags">
               <span className="legal-tag"><Shield size={12} /> Privacidade Protegida</span>
               <span className="legal-tag"><Code size={12} /> Tecnologia Orquestra.cs</span>
