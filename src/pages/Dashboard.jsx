@@ -87,7 +87,7 @@ const Dashboard = () => {
     <div style={{ animation: 'fadeIn 0.5s ease' }}>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Bem-vindo, Alisson! ✨</h1>
+          <h1 className="page-title">Bem-vindo, Alisson!</h1>
           <p style={{ color: '#aaa', marginTop: '4px' }}>Aqui está o resumo da sua Estética para hoje, {hoje}.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>

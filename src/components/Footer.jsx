@@ -18,7 +18,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-top">
           <div className="footer-brand">
-            <span className="footer-logo">Alisson Estética Automotiva</span>
+            <span className="footer-logo" style={{ color: '#ffffff' }}>Alisson Estética Automotiva</span>
             <p className="footer-motto">O brilho que seu veículo merece.</p>
           </div>
           

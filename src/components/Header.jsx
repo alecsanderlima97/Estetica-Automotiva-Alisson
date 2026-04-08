@@ -81,10 +81,6 @@ const Header = () => {
         left: '60%', /* Movido mais para a direita conforme solicitado */
         transform: 'translateX(-50%)'
       }}>
-        <div style={{ padding: '8px', background: 'rgba(59, 130, 246, 0.2)', borderRadius: '12px', display: 'flex', alignItems: 'center' }}>
-          {/* Foguetinho ✨ */}
-          <Rocket size={28} color="var(--primary-color)" fill="rgba(59, 130, 246, 0.2)" />
-        </div>
         ESTÉTICA AUTOMOTIVA
       </div>
 
