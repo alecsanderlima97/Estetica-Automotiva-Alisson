@@ -85,7 +85,7 @@ const Header = () => {
           {/* Foguetinho ✨ */}
           <Rocket size={28} color="var(--primary-color)" fill="rgba(59, 130, 246, 0.2)" />
         </div>
-        ALISSON ESTÉTICA
+        ALISSON ESTÉTICA AUTOMOTIVA
       </div>
 
       <div className="header-user-group" onClick={() => setMenuOpen(!menuOpen)}>
