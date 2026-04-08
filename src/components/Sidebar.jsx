@@ -25,12 +25,14 @@ const Sidebar = ({ isOpen, onClose, onToggleCalculator }) => {
 
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="brand-title" style={{ marginBottom: '30px' }}>
-        <img 
-          src="/pwa-512.png" 
-          alt="Alisson Estética Automotiva" 
-          style={{ width: '100%', maxWidth: '200px', height: 'auto', borderRadius: '12px', boxShadow: '0 8px 16px rgba(0,0,0,0.3)' }}
-        />
+      <div className="brand-title" style={{ fontFamily: 'sans-serif', textTransform: 'none', letterSpacing: 'normal', textAlign: 'left' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2px', opacity: 0.8, filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.2))' }}>
+          <span style={{ color: '#3b82f6', fontWeight: '900', fontSize: '36px', letterSpacing: '-1px' }}>O</span>
+          <span style={{ color: 'rgba(255, 255, 255, 0.9)', fontWeight: 'bold', fontSize: '22px', letterSpacing: '0.5px' }}>rquestra.cs</span>
+        </div>
+        <div style={{ fontSize: '10px', color: '#666', marginTop: '-4px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          SISTEMAS PERSONALIZADOS
+        </div>
       </div>
       
       <nav className="nav-links">
