@@ -472,9 +472,6 @@ const Agendamentos = () => {
       <AgendamentoFormModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setAgendamentoParaEditar(null); }} onSalvar={handleSalvarAgendamento} agendamentoParaEditar={agendamentoParaEditar} clientes={clientes} servicos={servicos} agendamentos={agendamentos} />
       <ImpressaoOSModal isOpen={!!agendamentoParaImprimir} onClose={() => setAgendamentoParaImprimir(null)} agendamento={agendamentoParaImprimir} cliente={clientes.find(c => c.nome === agendamentoParaImprimir?.cliente)} />
       <CalendarModal isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} onSelectDate={handleSelectDate} initialDate={dataVista} />
-      
-      {/* Espaçador para o rodapé */}
-      <div style={{ height: '400px' }}></div>
     </div>
   );
 };
