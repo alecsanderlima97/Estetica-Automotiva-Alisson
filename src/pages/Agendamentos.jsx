@@ -474,7 +474,7 @@ const Agendamentos = () => {
       <CalendarModal isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} onSelectDate={handleSelectDate} initialDate={dataVista} />
       
       {/* Espaçador para o rodapé */}
-      <div style={{ height: '100px' }}></div>
+      <div style={{ height: '400px' }}></div>
     </div>
   );
 };
