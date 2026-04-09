@@ -104,6 +104,10 @@ const Agendamentos = () => {
   const [filtroData, setFiltroData] = useState(new Date().toLocaleDateString('pt-BR'));
   const [dataVista, setDataVista] = useState(new Date());
 
+  const formatarValor = (valor) => {
+    return `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+  };
+
   useEffect(() => {
     const savedDate = localStorage.getItem('agenda_filtro_data');
     if (savedDate) {
@@ -204,9 +208,36 @@ const Agendamentos = () => {
           <h1 className="page-title">Agenda & Pátio</h1>
           <p style={{ color: '#aaa', marginTop: '8px' }}>Gestão de fluxos e ocupação da estética automotiva</p>
         </div>
-        <button className="action-btn" onClick={() => { setAgendamentoParaEditar(null); setIsModalOpen(true); }}>
-          <Plus size={18} /> Nova Ordem de Serviço
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+             <button className="action-btn" style={{ background: 'rgba(255,255,255,0.05)', color: '#888' }} onClick={() => setDataVista(new Date())}>
+                Hoje
+             </button>
+            <button className="action-btn" onClick={() => { setAgendamentoParaEditar(null); setIsModalOpen(true); }}>
+                <Plus size={18} /> Novo Agendamento
+            </button>
+        </div>
+      </div>
+
+      {/* KPIs Rápidos do Dia */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+          <div className="card" style={{ padding: '16px', borderLeft: '3px solid var(--primary-color)' }}>
+              <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>OCUPAÇÃO DO PÁTIO</div>
+              <div style={{ fontSize: '20px', fontWeight: '900', color: 'white' }}>
+                  {agendamentos.filter(a => a.dataStr === filtroData).length} Veículos
+              </div>
+          </div>
+          <div className="card" style={{ padding: '16px', borderLeft: '3px solid #10b981' }}>
+              <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>PREVISÃO DE FATURAMENTO</div>
+              <div style={{ fontSize: '20px', fontWeight: '900', color: '#10b981' }}>
+                  {formatarValor(agendamentos.filter(a => a.dataStr === filtroData).reduce((acc, curr) => acc + (curr.valor || 0), 0))}
+              </div>
+          </div>
+          <div className="card" style={{ padding: '16px', borderLeft: '3px solid #f59e0b' }}>
+              <div style={{ fontSize: '12px', color: '#888', marginBottom: '4px' }}>MÃO DE OBRA ATIVA</div>
+              <div style={{ fontSize: '20px', fontWeight: '900', color: '#f59e0b' }}>
+                  {agendamentos.filter(a => a.dataStr === filtroData && a.status === 'Confirmado').length} Concluídos
+              </div>
+          </div>
       </div>
 
       {/* Calendário Personalizado */}
@@ -318,71 +349,83 @@ const Agendamentos = () => {
         </div>
       </div>
 
-      <div className="card">
-        <table className="premium-table">
-          <thead>
-              <tr>
-                <th>OS #</th>
-                <th>Período</th>
-                <th>Cliente</th>
-                <th>Veículo</th>
-                <th>Serviço</th>
-                <th style={{ textAlign: 'right' }}>Valor Total</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>AÇÕES</th>
-              </tr>
-            </thead>
-            <tbody>
-              {agendamentos
-                .filter(a => a.dataStr === filtroData)
-                .sort((a,b) => a.horario.localeCompare(b.horario))
-                .map((agendamento) => (
-                <tr key={agendamento.id}>
-                  <td style={{ color: 'var(--primary-color)', fontWeight: '900', fontFamily: 'monospace' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {agendamentos
+          .filter(a => a.dataStr === filtroData)
+          .sort((a,b) => a.horario.localeCompare(b.horario))
+          .map((agendamento) => (
+            <div key={agendamento.id} className="card h-hover" style={{ 
+              display: 'flex', 
+              padding: '20px', 
+              gap: '20px',
+              alignItems: 'center',
+              borderLeft: `4px solid ${agendamento.status === 'Confirmado' ? '#10b981' : agendamento.status === 'Cancelado' ? '#ef4444' : 'var(--primary-color)'}`
+            }}>
+              {/* Horário */}
+              <div style={{ width: '100px', textAlign: 'center', borderRight: '1px solid rgba(255,255,255,0.05)', paddingRight: '20px' }}>
+                <div style={{ fontSize: '18px', fontWeight: '900', color: 'white' }}>{agendamento.horario}</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>Fim: {getHorarioFim(agendamento.horario, agendamento.duracao)}</div>
+              </div>
+
+              {/* Informações do Carro/Cliente */}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '900', color: 'var(--primary-color)', fontFamily: 'monospace', background: 'rgba(92,114,73,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
                     #{agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : '---'}
-                  </td>
-                  <td style={{ fontWeight: 'bold' }}>
-                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                       <span style={{ color: 'var(--primary-color)', fontSize: '15px' }}>{agendamento.horario} - {getHorarioFim(agendamento.horario, agendamento.duracao)}</span>
-                       <span style={{ fontSize: '10px', color: '#666' }}>Duração: {agendamento.duracao || '2h'}</span>
-                    </div>
-                  </td>
-                  <td style={{ fontWeight: '500', color: 'var(--text-light)' }}>{agendamento.cliente}</td>
-                  <td style={{ fontSize: '13px', color: '#888' }}>{agendamento.veiculo || '---'}</td>
-                  <td>{agendamento.servico}</td>
-                  <td style={{ textAlign: 'right', fontWeight: 'bold', color: 'var(--text-light)' }}>
-                    R$ {agendamento.valor?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                  </td>
-                <td>
-                  <span className={getStatusClass(agendamento.status)}>{agendamento.status}</span>
-                </td>
-                <td style={{ textAlign: 'right' }}>
-                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                    <button onClick={() => setAgendamentoParaImprimir(agendamento)} title="Gerar OS (PDF)" style={{ background: 'transparent', border: 'none', color: '#25D366', cursor: 'pointer' }}>
-                      <Printer size={18} />
-                    </button>
-                    <button onClick={() => setEditando(agendamento)} title="Editar" style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer' }}>
-                      <Edit2 size={18} />
-                    </button>
-                    <button 
-                      onClick={() => abrirWhatsAppLembrete(agendamento)}
-                      title="Enviar Lembrete"
-                      style={{ background: 'transparent', border: 'none', color: '#25D366', cursor: 'pointer' }}>
-                      <Send size={18} />
-                    </button>
-                    <button onClick={() => {
-                      if(window.confirm('Deseja excluir este agendamento?')) {
-                        deleteAgendamento(agendamento.id);
-                      }
-                    }} title="Excluir" style={{ background: 'transparent', border: 'none', color: '#dc2626', cursor: 'pointer' }}>
-                      <Trash2 size={18} />
-                    </button>
+                  </span>
+                  <h3 style={{ margin: 0, fontSize: '16px', color: 'white' }}>{agendamento.cliente}</h3>
+                </div>
+                <div style={{ display: 'flex', gap: '15px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#888', fontSize: '13px' }}>
+                    <Plus size={14} /> {agendamento.veiculo || 'Veículo não informado'}
                   </div>
-                </td>
-              </tr>
-            ))}
-            
-            {(() => {
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#888', fontSize: '13px' }}>
+                    <FileText size={14} /> {agendamento.servico}
+                  </div>
+                </div>
+              </div>
+
+              {/* Status e Lembrete */}
+              <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '20px' }}>
+                <div>
+                   <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'white', marginBottom: '4px' }}>
+                      R$ {agendamento.valor?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                   </div>
+                   <div className={getStatusClass(agendamento.status)} style={{ margin: 0 }}>{agendamento.status}</div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => setAgendamentoParaImprimir(agendamento)} 
+                    title="Imprimir OS" 
+                    className="action-btn-circle" 
+                    style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#25D366' }}
+                  >
+                    <Printer size={16} />
+                  </button>
+                  <button 
+                    onClick={() => abrirWhatsAppLembrete(agendamento)} 
+                    title="Enviar Lembrete" 
+                    className="action-btn-circle" 
+                    style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#25D366' }}
+                  >
+                    <Send size={16} />
+                  </button>
+                  <button 
+                    onClick={() => setEditando(agendamento)} 
+                    title="Editar" 
+                    className="action-btn-circle" 
+                    style={{ background: 'rgba(255,255,255,0.05)', color: '#888' }}
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Banner de Conflitos */}
+          {(() => {
               const agendados = agendamentos.filter(a => a.dataStr === filtroData);
               let conflitos = false;
               for(let i=0; i < agendados.length; i++) {
@@ -399,17 +442,19 @@ const Agendamentos = () => {
                   if (conflitos) break;
               }
               if (conflitos) return (
-                <tr><td colSpan="7" style={{ padding: '12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', textAlign: 'center', fontSize: '13px', fontWeight: 'bold' }}>
-                  ⚠️ Atenção: Existem serviços com horários sobrepostos no pátio hoje!
-                </td></tr>
+                <div style={{ padding: '16px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                  <AlertCircle size={20} />
+                  Atenção: Existem serviços com horários sobrepostos no pátio hoje!
+                </div>
               );
-            })()}
+          })()}
 
-            {agendamentos.filter(a => a.dataStr === filtroData).length === 0 && (
-              <tr><td colSpan="7" style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Nenhum atendimento para esta data.</td></tr>
-            )}
-          </tbody>
-        </table>
+          {agendamentos.filter(a => a.dataStr === filtroData).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '100px 0', color: '#666' }}>
+              <CalendarIcon size={48} style={{ opacity: 0.2, marginBottom: '16px' }} />
+              <p>Nenhum agendamento para este dia.</p>
+            </div>
+          )}
       </div>
 
       <AgendamentoFormModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setAgendamentoParaEditar(null); }} onSalvar={handleSalvarAgendamento} agendamentoParaEditar={agendamentoParaEditar} clientes={clientes} servicos={servicos} agendamentos={agendamentos} />
