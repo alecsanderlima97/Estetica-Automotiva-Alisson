@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import CalendarComponent from '../components/Calendar';
+import AutomationReminders from '../components/AutomationReminders';
 
 const Dashboard = () => {
   const { agendamentos, estoque, financeiro, clientes, privacidade, setPrivacidade } = useData();
@@ -77,6 +78,8 @@ const Dashboard = () => {
     .reduce((acc, curr) => acc + curr.valor, 0);
 
   const saldo = totalEntradas - totalSaidas;
+  const mesNome = agora.toLocaleString('pt-BR', { month: 'long' });
+  const mesNomeCapitalizado = mesNome.charAt(0).toUpperCase() + mesNome.slice(1);
 
   const formatarValor = (valor) => {
     if (privacidade) return 'R$ ••••••';
@@ -121,7 +124,7 @@ const Dashboard = () => {
               <TrendingUp size={20} />
             </div>
           </div>
-          <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>Total acumulado em Março</p>
+          <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>Total acumulado em {mesNomeCapitalizado}</p>
         </div>
 
         <div className="card" style={{ borderLeft: '4px solid #dc2626' }}>
@@ -153,8 +156,12 @@ const Dashboard = () => {
 
       <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         
-        {/* Agenda do Dia */}
-        <div className="card">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* Automação de Lembretes */}
+          <AutomationReminders />
+
+          {/* Agenda do Dia */}
+          <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Calendar size={20} color="var(--primary-color)" />
@@ -187,6 +194,7 @@ const Dashboard = () => {
                 Nenhum atendimento agendado para hoje.
               </div>
             )}
+          </div>
           </div>
         </div>
 

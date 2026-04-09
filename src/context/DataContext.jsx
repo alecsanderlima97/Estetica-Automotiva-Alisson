@@ -310,7 +310,9 @@ export const DataProvider = ({ children }) => {
       ...agendamento, 
       id: Date.now(), 
       osNumber: nextOS,
-      pagoSinal: agendamento.pagoSinal || false 
+      pagoSinal: agendamento.pagoSinal || false,
+      lembrete24h: false,
+      lembrete2h: false
     }]);
     setUserProfile(prev => ({ ...prev, osCounter: nextOS + 1 }));
   };
@@ -321,6 +323,10 @@ export const DataProvider = ({ children }) => {
 
   const updateAgendamentoStatus = (id, status) => {
     setAgendamentos(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+  };
+
+  const updateLembreteStatus = (id, tipo) => {
+    setAgendamentos(prev => prev.map(a => a.id === id ? { ...a, [tipo]: true } : a));
   };
 
   const deleteAgendamento = (id) => {
@@ -427,7 +433,8 @@ export const DataProvider = ({ children }) => {
       privacidade, setPrivacidade,
       theme, setTheme,
       userProfile, setUserProfile,
-      exportData, importData
+      exportData, importData,
+      updateLembreteStatus
     }}>
       {children}
     </DataContext.Provider>
