@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Volume2, VolumeX, AlertCircle, Loader2 } from 'lucide-react';
 
 const MusicPlayer = () => {
@@ -9,8 +9,8 @@ const MusicPlayer = () => {
   const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef(null);
   
-  // Agora usando o arquivo LOCAL que baixamos para o projeto
-  const musicUrl = "/bg-music.mp3?v=" + Date.now();
+  // Estabilizando a URL para evitar recarregamento a cada renderização
+  const musicUrl = useMemo(() => "/bg-music.mp3?v=" + Date.now(), []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -22,10 +22,14 @@ const MusicPlayer = () => {
     e.preventDefault();
     e.stopPropagation();
     
+    if (!audioRef.current) return;
+
     if (isPlaying) {
+      console.log("Pausando música de fundo...");
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      console.log("Tentando iniciar música de fundo:", musicUrl);
       setHasError(false);
       setIsLoading(true);
       
@@ -34,6 +38,7 @@ const MusicPlayer = () => {
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
+            console.log("Música de fundo iniciada com sucesso!");
             setIsPlaying(true);
             setIsLoading(false);
           })
@@ -71,10 +76,16 @@ const MusicPlayer = () => {
         ref={audioRef} 
         src={musicUrl} 
         loop 
-        onWaiting={() => setIsLoading(true)}
-        onCanPlay={() => setIsLoading(false)}
+        onWaiting={() => {
+          console.log("Áudio carregando...");
+          setIsLoading(true);
+        }}
+        onCanPlay={() => {
+          console.log("Áudio pronto para tocar.");
+          setIsLoading(false);
+        }}
         onError={(e) => {
-          console.error("Erro no arquivo local:", e);
+          console.error("Erro no arquivo de áudio:", e);
           setHasError(true);
           setIsLoading(false);
         }}
