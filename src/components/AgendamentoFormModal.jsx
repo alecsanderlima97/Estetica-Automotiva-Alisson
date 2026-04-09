@@ -123,6 +123,33 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const dataStrFinal = new Date(formData.data + 'T12:00:00').toLocaleDateString('pt-BR');
+    
+    // Verificação de Conflito de Horário
+    const [hIni, mIni] = formData.horario.split(':').map(Number);
+    const [dHH, dMM] = formData.duracao.split(':').map(Number);
+    const novoInicio = hIni * 60 + mIni;
+    const novoFim = novoInicio + (dHH * 60 + dMM);
+
+    const conflito = agendamentos.some(a => {
+      // Ignora o próprio agendamento se for edição e ignora cancelados
+      if (agendamentoParaEditar && a.id === agendamentoParaEditar.id) return false;
+      if (a.status === 'Cancelado') return false;
+      if (a.dataStr !== dataStrFinal) return false;
+
+      const [ah, am] = a.horario.split(':').map(Number);
+      const [adh, adm] = (a.duracao || '02:00').split(':').map(Number);
+      const aInicio = ah * 60 + am;
+      const aFim = aInicio + (adh * 60 + adm);
+
+      return novoInicio < aFim && aInicio < novoFim;
+    });
+
+    if (conflito) {
+      alert('⚠️ CONFLITO DE HORÁRIO: Já existe um serviço agendado neste período para esta data. Por favor, escolha outro horário ou dia.');
+      return;
+    }
+
     const cliente = clientes.find(c => c.id.toString() === formData.clienteId.toString());
     const servico = servicos.find(s => s.id.toString() === formData.servicoId.toString());
     const veiculo = cliente?.veiculos?.find(v => v.id.toString() === formData.veiculoId.toString());
@@ -139,7 +166,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
       veiculo: veiculo ? `${veiculo.modelo} (${veiculo.placa})` : 'Veículo não selecionado',
       servico: nomeServicoFinal,
       valor: valorTotal,
-      dataStr: new Date(formData.data + 'T12:00:00').toLocaleDateString('pt-BR')
+      dataStr: dataStrFinal
     });
   };
 
