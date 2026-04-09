@@ -67,7 +67,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
       <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '15px', zIndex: 2001 }}>
         <button 
           onClick={() => {
-            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
+            const msg = `*ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*VALOR TOTAL:* R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SINAL PAGO:* R$ ${(agendamento.pagoSinal ? valorSinal : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Acesse seu PDF completo no arquivo anexo ou via sistema. Contato: ${userProfile.telefone}_`;
             const phone = (cliente?.telefone || agendamento.telefone || '').replace(/\D/g, '');
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg.replace(/%0A/g, '\n'))}`, '_blank');
           }}
@@ -107,7 +107,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
                </div>
              )}
              <div>
-               <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000', textTransform: 'uppercase' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
+               <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '900', fontFamily: 'Oswald', color: '#000', textTransform: 'uppercase' }}>ESTÉTICA AUTOMOTIVA</h1>
                <div style={{ fontSize: '10px', color: '#000', marginTop: '6px' }}>
                  <p style={{ margin: '0 0 2px 0' }}>{userProfile.endereco} | <strong>{userProfile.telefone}</strong></p>
                  <p style={{ margin: 0, fontSize: '11px', fontWeight: 'bold', background: 'rgba(0,0,0,0.05)', padding: '2px 5px', display: 'inline-block' }}>CNPJ: {userProfile.cnpj}</p>
@@ -227,7 +227,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
         </div>
 
         <div style={{ marginTop: '30px', textAlign: 'center', fontSize: '9px', color: '#666' }}>
-          Documento gerado pelo Sistema Alisson Estética Automotiva em {new Date().toLocaleString('pt-BR')}
+          Documento gerado pelo Sistema Estética Automotiva em {new Date().toLocaleString('pt-BR')}
         </div>
       </div>
     </div>

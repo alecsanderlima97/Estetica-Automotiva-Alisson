@@ -19,7 +19,7 @@ const Header = () => {
 
   const handleLogout = () => {
     if (window.confirm('Tem certeza que deseja sair?')) {
-      localStorage.removeItem('alissonUser');
+      localStorage.removeItem('currentUser');
       window.location.reload();
     }
   };

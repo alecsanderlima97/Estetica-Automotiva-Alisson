@@ -229,7 +229,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
         </div>
 
         <div style={{ marginTop: '30px', textAlign: 'center', fontSize: '9px', color: '#666' }}>
-          Documento gerado pelo Sistema Alisson Estética Automotiva em {new Date().toLocaleString('pt-BR')}
+          Documento gerado pelo Sistema de Estética Automotiva em {new Date().toLocaleString('pt-BR')}
         </div>
       </div>
 

@@ -16,7 +16,7 @@ import { WeatherProvider } from './context/WeatherContext';
 function App() {
   const [user, setUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('alissonUser');
+      const saved = localStorage.getItem('currentUser');
       return saved ? JSON.parse(saved) : null;
     } catch (e) {
       console.error("Erro ao carregar usuário", e);
@@ -26,7 +26,7 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData);
-    localStorage.setItem('alissonUser', JSON.stringify(userData));
+    localStorage.setItem('currentUser', JSON.stringify(userData));
   };
 
   // Aviso de backup ao fechar a aba

@@ -87,8 +87,8 @@ const Dashboard = () => {
     <div style={{ animation: 'fadeIn 0.5s ease' }}>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Bem-vindo, Alisson!</h1>
-          <p style={{ color: '#aaa', marginTop: '4px' }}>Aqui está o resumo da sua Estética para hoje, {hoje}.</p>
+          <h1 className="page-title">Bem-vindo(a) ao seu Painel!</h1>
+          <p style={{ color: '#aaa', marginTop: '4px' }}>Aqui está o resumo da sua Estética Automotiva para hoje, {hoje}.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button 
@@ -216,7 +216,7 @@ const Dashboard = () => {
                       <button 
                         onClick={() => {
                           const tel = c.telefone?.replace(/\D/g, '');
-                          window.open(`https://wa.me/${tel}?text=Parabéns pelo seu aniversário! 🎉 Gostaria de oferecer um presente especial da Alisson Estética Automotiva!`, '_blank');
+                          window.open(`https://wa.me/${tel}?text=Parabéns pelo seu aniversário! 🎉 Gostaria de oferecer um presente especial da nossa Estética Automotiva!`, '_blank');
                         }}
                         style={{ background: 'none', border: 'none', color: '#25D366', cursor: 'pointer' }}
                         title="Enviar Parabéns"

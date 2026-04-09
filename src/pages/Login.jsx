@@ -21,7 +21,7 @@ const Login = ({ onLogin }) => {
     const savedAlissonPass = localStorage.getItem('alisson_admin_pass') || 'admin';
     
     const authorizedUsers = [
-      { email: 'walissonrodrigues1055@gmail.com', password: savedAlissonPass, name: 'Alisson Detailing', role: 'admin' },
+      { email: 'walissonrodrigues1055@gmail.com', password: savedAlissonPass, name: 'Administrador', role: 'admin' },
       { email: 'orquestracs@gmail.com', password: 'admin', name: 'Suporte Técnico', role: 'dev' }
     ];
 
@@ -80,7 +80,7 @@ const Login = ({ onLogin }) => {
         </div>
 
         <h1 style={{ color: 'var(--text-light)', fontSize: '24px', marginBottom: '8px', fontFamily: 'Oswald', textTransform: 'uppercase' }}>Sistema de Gestão</h1>
-        <p style={{ color: '#888', fontSize: '14px', marginBottom: '32px' }}>Acesse sua conta na Estética Automotiva Alisson</p>
+        <p style={{ color: '#888', fontSize: '14px', marginBottom: '32px' }}>Acesse sua conta na Estética Automotiva</p>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px', textAlign: 'left' }}>

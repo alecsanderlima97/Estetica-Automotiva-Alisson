@@ -43,7 +43,7 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
         {/* Conteúdo do Relatório (O que será impresso) */}
         <div style={{ padding: '60px 50px' }} id="printable-relatorio">
           <div style={{ textAlign: 'center', marginBottom: '40px', borderBottom: '2px solid #eee', paddingBottom: '20px' }}>
-            <h1 style={{ margin: '0 0 10px 0', fontSize: '28px', color: '#111', fontFamily: 'Oswald' }}>ALISSON ESTÉTICA AUTOMOTIVA</h1>
+            <h1 style={{ margin: '0 0 10px 0', fontSize: '28px', color: '#111', fontFamily: 'Oswald' }}>ESTÉTICA AUTOMOTIVA</h1>
             <p style={{ margin: 0, color: '#666', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px' }}>Relatório Financeiro Detalhado - {periodo}</p>
             <p style={{ margin: '5px 0 0 0', color: '#999', fontSize: '12px' }}>Gerado em: {new Date().toLocaleString('pt-BR')}</p>
           </div>
@@ -97,7 +97,7 @@ const RelatorioFinanceiroModal = ({ isOpen, onClose, lancamentos, resumo, period
           </div>
 
           <div style={{ marginTop: '50px', borderTop: '1px solid #eee', paddingTop: '20px', fontSize: '12px', color: '#999', textAlign: 'center' }}>
-            Este documento é um registro interno de Alisson Estética Automotiva.
+            Este documento é um registro interno da Estética Automotiva.
           </div>
         </div>
 

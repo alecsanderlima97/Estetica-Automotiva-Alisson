@@ -24,7 +24,7 @@ const Settings = () => {
   const handleSaveProfile = (e) => {
     e.preventDefault();
     localStorage.setItem('alisson_user_profile', JSON.stringify(userProfile));
-    alert('Configurações de perfil do Alisson salvas com sucesso!');
+    alert('Configurações de perfil salvas com sucesso!');
   };
 
   const [newPassword, setNewPassword] = useState('');
@@ -95,7 +95,7 @@ const Settings = () => {
                 border: '2px solid var(--primary-color)'
               }}>
                 {userProfile.foto ? (
-                  <img src={userProfile.foto} alt="Alisson" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={userProfile.foto} alt="Perfil" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   <UserIcon size={40} color="#888" />
                 )}
@@ -158,7 +158,7 @@ const Settings = () => {
               }}
             >
               <SaveIcon size={20} style={{ marginRight: '8px' }} />
-              SALVAR CONFIGURAÇÕES DO ALISSON
+              SALVAR CONFIGURAÇÕES
             </button>
           </div>
         </div>

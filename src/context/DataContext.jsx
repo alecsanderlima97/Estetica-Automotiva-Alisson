@@ -27,7 +27,7 @@ export const DataProvider = ({ children }) => {
       console.error(`Erro ao carregar ${key}`, e);
       return defaultValue;
     }
-  };  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_final', [
+  };  const [servicos, setServicos] = useState(() => getInitialData('alisson_servicos_final', [
     { 
       id: 1, 
       nome: 'Limpeza Técnica', 

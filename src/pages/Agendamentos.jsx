@@ -141,7 +141,7 @@ const Agendamentos = () => {
 
   const abrirWhatsAppLembrete = (agendamento) => {
     const valorSinal = (agendamento.valor * 0.3).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-    const msg = `Olá ${agendamento.cliente}! 🚗\n\nPassando para confirmar seu agendamento na Alisson Estética Automotiva às ${agendamento.horario} do dia ${agendamento.dataStr}.\n\nVeículo: ${agendamento.veiculo || 'Seu Veículo'}\n\nPara garantir sua vaga no pátio, solicitamos o pagamento do sinal de 30% (R$ ${valorSinal}).\n\n🔑 *Chave PIX (Alisson):* 15996775714\n\nPode enviar o comprovante por aqui? Aguardamos você! ✨`;
+    const msg = `Olá ${agendamento.cliente}! 🚗\n\nPassando para confirmar seu agendamento na nossa Estética Automotiva às ${agendamento.horario} do dia ${agendamento.dataStr}.\n\nVeículo: ${agendamento.veiculo || 'Seu Veículo'}\n\nPara garantir sua vaga no pátio, solicitamos o pagamento do sinal de 30% (R$ ${valorSinal}).\n\n🔑 *Chave PIX:* 15996775714\n\nPode enviar o comprovante por aqui? Aguardamos você! ✨`;
     window.open(`https://wa.me/${agendamento.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
