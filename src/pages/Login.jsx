@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Lock, User, Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem('last_logged_email') || '';
+  });
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,6 +31,9 @@ const Login = ({ onLogin }) => {
     
     setTimeout(() => {
       if (matchedUser) {
+        // Salva o e-mail para a próxima vez
+        localStorage.setItem('last_logged_email', email);
+        
         // Toca o som de entrada
         playLoginSound().catch(e => console.log("Erro ao tocar som:", e));
         
