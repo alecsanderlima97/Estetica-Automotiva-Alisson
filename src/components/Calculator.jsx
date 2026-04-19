@@ -13,13 +13,13 @@ const Calculator = ({ onClose }) => {
   const [isScientific, setIsScientific] = useState(false);
   const [position, setPosition] = useState({ x: window.innerWidth - 300, y: window.innerHeight - 550 });
   const [isDragging, setIsDragging] = useState(false);
-  
+
   const offsetRef = useRef({ x: 0, y: 0 });
 
   const playClick = () => {
     const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
     audio.volume = 0.1;
-    audio.play().catch(() => {});
+    audio.play().catch(() => { });
   };
 
   const handleMouseDown = (e) => {
@@ -34,13 +34,13 @@ const Calculator = ({ onClose }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!isDragging) return;
-      
+
       const newX = e.clientX - offsetRef.current.x;
       const newY = e.clientY - offsetRef.current.y;
-      
+
       const maxX = window.innerWidth - (isScientific ? 440 : 260);
       const maxY = window.innerHeight - 450;
-      
+
       setPosition({
         x: Math.max(0, Math.min(newX, maxX)),
         y: Math.max(0, Math.min(newY, maxY))
@@ -84,7 +84,7 @@ const Calculator = ({ onClose }) => {
       const lastChar = prev.slice(-1);
       const isOp = ['+', '-', '*', '/', '^', '%'].includes(val);
       const lastIsOp = ['+', '-', '*', '/', '^', '%'].includes(lastChar);
-      
+
       if (isOp && lastIsOp && val !== '-' && lastChar !== '(') {
         return prev.slice(0, -1) + val;
       }
@@ -98,7 +98,7 @@ const Calculator = ({ onClose }) => {
     try {
       const result = math.evaluate(expression);
       const formattedResult = Number.isInteger(result) ? result.toString() : parseFloat(result.toFixed(8)).toString();
-      
+
       setDisplay(formattedResult);
       setHistory(prev => [{ id: Date.now(), expression, result: formattedResult, timestamp: new Date().toLocaleTimeString() }, ...prev].slice(0, 30));
       setExpression(formattedResult);
@@ -175,16 +175,16 @@ const Calculator = ({ onClose }) => {
             <button onClick={backspace} className="btn-alt"><Delete size={16} /></button>
             <button onClick={() => handleInput('%')} className="btn-op"><Percent size={16} /></button>
             <button onClick={() => handleInput('/')} className="btn-op">÷</button>
-            
+
             {[7, 8, 9].map(n => <button key={n} onClick={() => handleInput(n.toString())} className="btn-num">{n}</button>)}
             <button onClick={() => handleInput('*')} className="btn-op">×</button>
-            
+
             {[4, 5, 6].map(n => <button key={n} onClick={() => handleInput(n.toString())} className="btn-num">{n}</button>)}
             <button onClick={() => handleInput('-')} className="btn-op">−</button>
-            
+
             {[1, 2, 3].map(n => <button key={n} onClick={() => handleInput(n.toString())} className="btn-num">{n}</button>)}
             <button onClick={() => handleInput('+')} className="btn-op">+</button>
-            
+
             <button onClick={() => handleInput('0')} style={{ gridColumn: 'span 2' }} className="btn-num">0</button>
             <button onClick={() => handleInput('.')} className="btn-num">.</button>
             <button onClick={calculate} className="btn-eq"><Equal size={18} /></button>
@@ -193,7 +193,7 @@ const Calculator = ({ onClose }) => {
           {isScientific && (
             <div style={{ width: '120px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
               {['sin', 'cos', 'tan', 'log', 'sqrt', 'pow', '(', ')'].map(f => (
-                <button key={f} onClick={() => f === 'pow' ? handleInput('^') : addToExpression(f+'(')} className="btn-sci">{f}</button>
+                <button key={f} onClick={() => f === 'pow' ? handleInput('^') : addToExpression(f + '(')} className="btn-sci">{f}</button>
               ))}
               <button onClick={() => addToExpression('pi')} className="btn-sci">π</button>
               <button onClick={() => addToExpression('e')} className="btn-sci">e</button>
