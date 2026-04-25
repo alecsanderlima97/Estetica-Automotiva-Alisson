@@ -389,7 +389,7 @@ const AgendamentoFormModal = ({ isOpen, onClose, onSalvar, clientes, servicos, a
                    <QrCode size={90} color="black" />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <button type="button" onClick={() => navigator.clipboard.writeText('15996775714')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', width: '100%', padding: '12px', borderRadius: '10px', cursor: 'pointer', fontSize: '13px' }}>
+                  <button type="button" onClick={() => navigator.clipboard.writeText('48724911810')} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#aaa', width: '100%', padding: '12px', borderRadius: '10px', cursor: 'pointer', fontSize: '13px' }}>
                     <Copy size={16} /> Copiar Chave PIX
                   </button>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px', cursor: 'pointer', color: formData.pagoSinal ? 'var(--primary-color)' : '#aaa' }}>
