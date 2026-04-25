@@ -273,7 +273,7 @@ const ImpressaoOSModal = ({ isOpen, onClose, agendamento, cliente }) => {
 
         <button 
           onClick={() => {
-            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A_Aguardamos você! Contato: ${userProfile.telefone}_`;
+            const msg = `*ALISSON ESTÉTICA AUTOMOTIVA*%0A%0A*ORDEM DE SERVIÇO #${agendamento.osNumber ? agendamento.osNumber.toString().padStart(5, '0') : agendamento.id.toString().slice(-5)}*%0A------------------------------%0A*Cliente:* ${cliente?.nome || agendamento.cliente}%0A*Veículo:* ${agendamento.veiculo || '---'}%0A*Serviço:* ${agendamento.servico}%0A*Entrada:* ${agendamento.dataStr} às ${agendamento.horario}%0A------------------------------%0A*SALDO À PAGAR:* R$ ${valorRestante.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}%0A%0A*🔑 Chave PIX (CPF):* 48724911810%0A%0A_Aguardamos você! Contato: ${userProfile.telefone}_`;
             const phone = (cliente?.telefone || agendamento.telefone || '').replace(/\D/g, '');
             window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(msg.replace(/%0A/g, '\n'))}`, '_blank');
           }}

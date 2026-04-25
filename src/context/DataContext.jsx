@@ -199,7 +199,7 @@ export const DataProvider = ({ children }) => {
     const defaultProfile = { 
       nome: 'Alisson Henrique Rodrigues de Campos', 
       cargo: 'Proprietário', 
-      cpf: '484.130.698-66',
+      cpf: '487.249.118-10',
       nascimento: '27/04/1999',
       endereco: 'Rua Ângelo Santos Penteado, 186',
       email: 'walissonrodrigues1055@gmail.com',

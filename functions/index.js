@@ -4,51 +4,50 @@ const axios = require('axios');
 const dayjs = require('dayjs');
 require('dayjs/locale/pt-br');
 
+// Inicializa o Firebase Admin
 admin.initializeApp();
 dayjs.locale('pt-br');
 
 const db = admin.firestore();
 
-// CONFIGURAÇÃO DA API DE WHATSAPP (Substituir pelos dados reais)
-// Recomenda-se usar Firebase Secrets: firebase functions:secrets:set WHATSAPP_API_KEY
-const WHATSAPP_API_URL = 'https://api.sua-instancia.com'; // Ex: Evolution API ou Z-API
-const WHATSAPP_API_KEY = 'SUA_CHAVE_API_AQUI';
-const WHATSAPP_INSTANCE = 'nome_instancia';
+// CONFIGURAÇÃO DA Z-API
+const Z_API_URL = 'https://api.z-api.io/instances/3F1E61365459D2C6327FBE4FDF68D33E/token/E145B91BDC084BEE32672150/send-text';
 
 /**
- * Função para disparar a mensagem via Gateway
+ * Função para disparar a mensagem via Z-API
  */
 async function sendWhatsApp(to, message) {
     try {
         const cleanNumber = to.replace(/\D/g, '');
-        // Ajuste o endpoint e body conforme a sua API (Evolution, Z-API, etc)
-        const response = await axios.post(`${WHATSAPP_API_URL}/message/sendText/${WHATSAPP_INSTANCE}`, {
-            number: cleanNumber,
-            text: message,
-            linkPreview: true
-        }, {
-            headers: { 'apikey': WHATSAPP_API_KEY }
+        console.log(`Enviando mensagem para ${cleanNumber} via Z-API...`);
+
+        const response = await axios.post(Z_API_URL, {
+            phone: cleanNumber,
+            message: message
         });
+
+        console.log('Resposta da Z-API:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Erro ao enviar WhatsApp:', error.response?.data || error.message);
+        console.error('Erro ao enviar WhatsApp (Z-API):', error.response?.data || error.message);
         return null;
     }
 }
 
 /**
  * Automação 1: Lembrete de Agendamento (24h antes)
- * Roda todos os dias às 18:00 para avisar sobre amanhã
+ * Roda todos os dias às 18:00
  */
-exports.scheduledAppointmentReminders = functions.pubsub
-    .schedule('0 18 * * *') // Todo dia às 18:00
+exports.scheduledAppointmentReminders = functions
+    .region('us-central1')
+    .pubsub.schedule('0 18 * * *')
     .timeZone('America/Sao_Paulo')
     .onRun(async (context) => {
-        const amanhã = dayjs().add(1, 'day').format('DD/MM/YYYY');
-        console.log(`Buscando agendamentos para: ${amanhã}`);
+        const amanha = dayjs().add(1, 'day').format('DD/MM/YYYY');
+        console.log(`Buscando agendamentos para: ${amanha}`);
 
         const snapshot = await db.collection('agendamentos')
-            .where('dataStr', '==', amanhã)
+            .where('dataStr', '==', amanha)
             .where('status', 'not-in', ['Cancelado', 'Concluído'])
             .get();
 
@@ -59,7 +58,7 @@ exports.scheduledAppointmentReminders = functions.pubsub
 
         const promises = snapshot.docs.map(async (doc) => {
             const data = doc.data();
-            if (data.lembreteAutomativoEnviado) return; // Evita duplicidade
+            if (data.lembreteAutomativoEnviado) return;
 
             const msg = `Olá, *${data.cliente}*! 🚗✨\n\nPassando para confirmar seu serviço de *${data.servico}* agendado para amanhã, dia *${data.dataStr}* às *${data.horario}*.\n\nPodemos confirmar? Aguardamos você!`;
 
@@ -70,15 +69,17 @@ exports.scheduledAppointmentReminders = functions.pubsub
         });
 
         await Promise.all(promises);
-        return console.log('Lembretes de agendamento enviados.');
+        console.log('Processamento de lembretes concluído.');
+        return null;
     });
 
 /**
  * Automação 2: Lembrete de Aniversário
  * Roda todos os dias às 09:00
  */
-exports.scheduledBirthdayWishes = functions.pubsub
-    .schedule('0 9 * * *') // Todo dia às 09:00
+exports.scheduledBirthdayWishes = functions
+    .region('us-central1')
+    .pubsub.schedule('0 9 * * *')
     .timeZone('America/Sao_Paulo')
     .onRun(async (context) => {
         const hojeMesDia = dayjs().format('MM-DD');
@@ -89,7 +90,6 @@ exports.scheduledBirthdayWishes = functions.pubsub
         const aniversariantes = snapshot.docs.filter(doc => {
             const data = doc.data();
             if (!data.dataAniversario) return false;
-            // dataAniversario vem como YYYY-MM-DD do input type="date"
             return data.dataAniversario.endsWith(hojeMesDia);
         });
 
@@ -106,5 +106,6 @@ exports.scheduledBirthdayWishes = functions.pubsub
         });
 
         await Promise.all(promises);
-        return console.log('Mensagens de aniversário enviadas.');
+        console.log('Processamento de aniversários concluído.');
+        return null;
     });
