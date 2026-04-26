@@ -224,7 +224,8 @@ const Dashboard = () => {
                       <button 
                         onClick={() => {
                           const tel = c.telefone?.replace(/\D/g, '');
-                          window.open(`https://wa.me/${tel}?text=Parabéns pelo seu aniversário! 🎉 Gostaria de oferecer um presente especial da nossa Estética Automotiva!`, '_blank');
+                          const msg = `Parabéns, *${c.nome}*! 🎂🎉\n*FELIZ ANIVERSÁRIO!* 🥳🎊\n\nMuita saúde, paz, harmonia, sucesso e incontáveis realizações!!! Esperamos que no próximo ano, possamos mais uma vez celebrar muitas conquistas.\n\n— *Alisson Estética Automotiva* 🚗✨`;
+                          window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`, '_blank');
                         }}
                         style={{ background: 'none', border: 'none', color: '#25D366', cursor: 'pointer' }}
                         title="Enviar Parabéns"
