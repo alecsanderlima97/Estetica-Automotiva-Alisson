@@ -73,6 +73,11 @@ function timestampToMillis(value) {
   return Number.isNaN(parsed) ? 0 : parsed;
 }
 
+function timestampToIso(value) {
+  const millis = timestampToMillis(value);
+  return millis ? new Date(millis).toISOString() : "";
+}
+
 function addMonths(dateString, months = 1) {
   const base = dateString ? new Date(`${dateString}T12:00:00`) : new Date();
   if (Number.isNaN(base.getTime())) return "";
@@ -353,6 +358,7 @@ export async function listPlatformTenants() {
     const tenant = { id: item.id, ...item.data() };
     const usersSnapshot = await getDocs(collection(db, `${tenantPath(item.id)}/users`)).catch(() => ({ docs: [] }));
     const aiUsage = await getTenantAiUsage(item.id, tenant.planId);
+    const appSnapshot = await getTenantAppSnapshot(item.id);
     const users = usersSnapshot.docs.map((userDoc) => ({ id: userDoc.id, ...userDoc.data() }));
     const lastSeenAt = Math.max(...users.map((user) => timestampToMillis(user.lastSeenAt)), 0);
     const lastAccessAt = Math.max(timestampToMillis(tenant.lastAccessAt), ...users.map((user) => Math.max(timestampToMillis(user.lastAccessAt), timestampToMillis(user.lastSeenAt))), 0);
@@ -369,6 +375,7 @@ export async function listPlatformTenants() {
       online: onlineUsers.length > 0,
       onlineUsers: onlineUsers.length,
       aiUsage,
+      appSnapshot,
       users
     };
   }));
@@ -378,6 +385,36 @@ export async function listPlatformTenants() {
 
 export async function updateTenantSubscription(tenantId, updates) {
   await updateDoc(doc(db, tenantPath(tenantId)), { ...updates, updatedAt: serverTimestamp() });
+}
+
+export async function getTenantAppSnapshot(tenantId) {
+  if (!firebaseReady || !db || !tenantId) {
+    return { counts: {}, auditLogs: [], updatedAt: "" };
+  }
+
+  const snapshot = await getDoc(doc(db, `${tenantPath(tenantId)}/appData/main`)).catch(() => null);
+  if (!snapshot?.exists?.()) {
+    return { counts: {}, auditLogs: [], updatedAt: "" };
+  }
+
+  const data = snapshot.data();
+  const countCollection = (key) => {
+    const items = Array.isArray(data[key]) ? data[key] : [];
+    const deleted = items.filter((item) => item?.deletedAt).length;
+    return { active: items.length - deleted, deleted, total: items.length };
+  };
+
+  return {
+    counts: {
+      clientes: countCollection("clientes"),
+      agendamentos: countCollection("agendamentos"),
+      servicos: countCollection("servicos"),
+      estoque: countCollection("estoque"),
+      financeiro: countCollection("financeiro")
+    },
+    auditLogs: Array.isArray(data.auditLogs) ? data.auditLogs.slice(0, 12) : [],
+    updatedAt: timestampToIso(data.updatedAt)
+  };
 }
 
 export async function getTenantAiUsage(tenantId, planId = "medium") {

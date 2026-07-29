@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Archive, CheckCircle2, Copy, Eye, RefreshCw, Save, TicketPlus } from "lucide-react";
+import { Archive, CheckCircle2, Copy, Eye, Lock, Mail, RefreshCw, Save, TicketPlus, Unlock } from "lucide-react";
 import {
   PLANS,
   SUBSCRIPTION_STATUSES,
@@ -67,6 +67,7 @@ const situationLabel = (tenant) => {
   if (!tenant.nextBillingDate) return { text: "Sem vencimento", tone: "muted" };
   if (billing.blocked) return { text: "Bloqueado", tone: "danger" };
   if (billing.pastDueDays > 0) return { text: `Vencido ha ${billing.pastDueDays} dia(s)`, tone: "warn" };
+  if (billing.paid) return { text: "Pago / em dia", tone: "ok" };
   const due = new Date(`${tenant.nextBillingDate}T23:59:59`);
   const days = Math.max(0, Math.ceil((due.getTime() - Date.now()) / 86400000));
   return { text: `Em dia: vence em ${days} dia(s)`, tone: "ok" };
@@ -93,6 +94,15 @@ const badgeStyle = (tone) => {
     fontWeight: 800,
     lineHeight: 1.15
   };
+};
+
+const getPrimaryEmail = (tenant) => tenant.users?.[0]?.email || "";
+
+const getSupportMailto = (tenant) => {
+  const email = getPrimaryEmail(tenant);
+  const subject = encodeURIComponent("Suporte Orquestra Auto Detail");
+  const body = encodeURIComponent(`Ola, ${tenant.name || tenant.companyName || "cliente"}.\n\nEstou entrando em contato sobre o acesso ao Orquestra Auto Detail.`);
+  return email ? `mailto:${email}?subject=${subject}&body=${body}` : "";
 };
 
 const PlatformAdmin = () => {
@@ -154,6 +164,18 @@ const PlatformAdmin = () => {
     await load();
   };
 
+  const quickStatus = async (tenant, nextStatus) => {
+    if (nextStatus === "bloqueado") {
+      const ok = window.confirm(`Bloquear acesso de ${tenant.name || tenant.companyName || tenant.id}? Os dados ficam salvos, mas o cliente nao entra ate voce liberar.`);
+      if (!ok) return;
+    }
+    await updateTenantSubscription(tenant.id, {
+      subscriptionStatus: nextStatus
+    });
+    setMessage(nextStatus === "bloqueado" ? "Cliente bloqueado." : "Cliente liberado.");
+    await load();
+  };
+
   const removeTenant = async (tenant) => {
     const ok = window.confirm(`Arquivar ${tenant.name || tenant.companyName}? Os dados ficam guardados, mas ele sai desta lista.`);
     if (!ok) return;
@@ -202,7 +224,7 @@ const PlatformAdmin = () => {
         </div>
 
         <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", minWidth: 1180, borderCollapse: "collapse", fontSize: 12 }}>
+          <table style={{ width: "100%", minWidth: 1260, borderCollapse: "collapse", fontSize: 12 }}>
             <thead>
               <tr style={{ background: "#f8fafc", color: "#334155", textAlign: "left" }}>
                 <Th>Cliente</Th>
@@ -256,6 +278,8 @@ const PlatformAdmin = () => {
                         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                           <button style={buttonDark} onClick={() => saveTenant(tenant)}><Save size={13} /> Salvar</button>
                           <button style={{ ...buttonDark, background: "#166534" }} onClick={() => setPaid(tenant)} title="Marcar como pago"><CheckCircle2 size={13} /></button>
+                          <button style={{ ...buttonDark, background: "#0f766e" }} onClick={() => quickStatus(tenant, "ativo")} title="Liberar acesso"><Unlock size={13} /></button>
+                          <button style={{ ...buttonDark, background: "#b45309" }} onClick={() => quickStatus(tenant, "bloqueado")} title="Bloquear acesso"><Lock size={13} /></button>
                           <button style={{ ...buttonDark, background: "#475569" }} onClick={() => setExpandedId(expandedId === tenant.id ? "" : tenant.id)} title="Ver detalhes"><Eye size={13} /></button>
                           <button style={{ ...buttonDark, background: "#991b1b" }} onClick={() => removeTenant(tenant)} title="Arquivar cliente"><Archive size={13} /></button>
                         </div>
@@ -263,8 +287,47 @@ const PlatformAdmin = () => {
                     </tr>
                     {expandedId === tenant.id ? (
                       <tr style={{ background: "#f8fafc" }}>
-                        <td colSpan="10" style={{ padding: "12px 14px", color: "#334155", borderTop: "1px solid #e5e7eb" }}>
-                          Inicio: {formatDate(tenant.startDate)} | Vencimento mensal: dia {tenant.billingDay || 15} | Ultima presenca: {formatDateTime(tenant.lastSeenAt)} | Usuarios: {tenant.users?.length || 0}
+                        <td colSpan="10" style={{ padding: 16, color: "#334155", borderTop: "1px solid #e5e7eb" }}>
+                          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr 1fr", gap: 14, alignItems: "stretch" }}>
+                            <DetailCard title="Assinatura">
+                              <InfoLine label="Inicio" value={formatDate(tenant.startDate)} />
+                              <InfoLine label="Vencimento mensal" value={`Dia ${tenant.billingDay || 15}`} />
+                              <InfoLine label="Ultima presenca" value={formatDateTime(tenant.lastSeenAt)} />
+                              <InfoLine label="Uso IA" value={`${tenant.aiUsage?.used || 0} usadas, ${tenant.aiUsage?.remaining ?? 0} restantes`} />
+                              {getPrimaryEmail(tenant) ? (
+                                <a href={getSupportMailto(tenant)} style={{ ...buttonDark, marginTop: 10, textDecoration: "none", width: "fit-content" }}>
+                                  <Mail size={13} /> E-mail de suporte
+                                </a>
+                              ) : null}
+                            </DetailCard>
+                            <DetailCard title="Dados do cliente">
+                              <MiniCount label="Clientes" value={tenant.appSnapshot?.counts?.clientes} />
+                              <MiniCount label="Agendamentos" value={tenant.appSnapshot?.counts?.agendamentos} />
+                              <MiniCount label="Servicos" value={tenant.appSnapshot?.counts?.servicos} />
+                              <MiniCount label="Estoque" value={tenant.appSnapshot?.counts?.estoque} />
+                              <MiniCount label="Financeiro" value={tenant.appSnapshot?.counts?.financeiro} />
+                              <InfoLine label="Ultimo backup nuvem" value={formatDateTime(tenant.appSnapshot?.updatedAt)} />
+                            </DetailCard>
+                            <DetailCard title="Usuarios e auditoria">
+                              <div style={{ display: "grid", gap: 8 }}>
+                                {(tenant.users || []).map((user) => (
+                                  <div key={user.id} style={{ display: "flex", justifyContent: "space-between", gap: 10, borderBottom: "1px solid #e2e8f0", paddingBottom: 7 }}>
+                                    <span style={{ color: "#0f172a", fontWeight: 800 }}>{user.name || user.email}</span>
+                                    <span style={{ color: "#64748b" }}>{user.role || "Consulta"}</span>
+                                  </div>
+                                ))}
+                                {!tenant.users?.length ? <span style={{ color: "#64748b" }}>Sem usuarios vinculados.</span> : null}
+                              </div>
+                              <div style={{ marginTop: 12, display: "grid", gap: 7 }}>
+                                {(tenant.appSnapshot?.auditLogs || []).slice(0, 5).map((log) => (
+                                  <div key={log.id} style={{ color: "#475569", fontSize: 11 }}>
+                                    <strong style={{ color: "#0f172a" }}>{log.action}</strong> em {log.entity} - {log.label || log.entityId} <span style={{ color: "#94a3b8" }}>({formatDateTime(log.createdAt)})</span>
+                                  </div>
+                                ))}
+                                {!tenant.appSnapshot?.auditLogs?.length ? <span style={{ color: "#64748b" }}>Sem auditoria registrada ainda.</span> : null}
+                              </div>
+                            </DetailCard>
+                          </div>
                         </td>
                       </tr>
                     ) : null}
@@ -285,5 +348,23 @@ const PlatformAdmin = () => {
 
 const Th = ({ children }) => <th style={{ padding: "12px 14px", fontSize: 12, fontWeight: 900, whiteSpace: "nowrap" }}>{children}</th>;
 const Td = ({ children }) => <td style={{ padding: "11px 14px", verticalAlign: "middle", color: "#0f172a" }}>{children}</td>;
+
+const DetailCard = ({ title, children }) => (
+  <section style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: 14 }}>
+    <h3 style={{ margin: "0 0 12px", color: "#020617", fontSize: 13, fontWeight: 900 }}>{title}</h3>
+    {children}
+  </section>
+);
+
+const InfoLine = ({ label, value }) => (
+  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, borderBottom: "1px solid #f1f5f9", padding: "7px 0", fontSize: 12 }}>
+    <span style={{ color: "#64748b" }}>{label}</span>
+    <strong style={{ color: "#0f172a", textAlign: "right" }}>{value || "Sem registro"}</strong>
+  </div>
+);
+
+const MiniCount = ({ label, value = {} }) => (
+  <InfoLine label={label} value={`${value.active || 0} ativos / ${value.deleted || 0} arquivados`} />
+);
 
 export default PlatformAdmin;
