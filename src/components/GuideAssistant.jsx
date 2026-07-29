@@ -40,7 +40,7 @@ const steps = [
     action: 'Ver estoque'
   },
   {
-    path: '/configuracoes',
+    path: '/usuarios',
     title: 'Convide colaboradores',
     text: 'Gere convites internos para Proprietario, Financeiro ou Consulta conforme a funcao de cada pessoa.',
     action: 'Gerar convite'
