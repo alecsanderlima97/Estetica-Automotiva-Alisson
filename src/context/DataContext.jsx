@@ -236,6 +236,39 @@ export const DataProvider = ({ children, currentUser }) => {
     }
   });
 
+  const [auditLogs, setAuditLogs] = useState(() => getInitialData('auditLogs', []));
+
+  const activeOnly = (items) => items.filter((item) => !item?.deletedAt);
+  const visibleClientes = useMemo(() => activeOnly(clientes), [clientes]);
+  const visibleAgendamentos = useMemo(() => activeOnly(agendamentos), [agendamentos]);
+  const visibleServicos = useMemo(() => activeOnly(servicos), [servicos]);
+  const visibleEstoque = useMemo(() => activeOnly(estoque), [estoque]);
+  const visibleFinanceiro = useMemo(() => activeOnly(financeiro), [financeiro]);
+
+  const registerAudit = (action, entity, entityId, label = '') => {
+    const entry = {
+      id: Date.now() + Math.random(),
+      action,
+      entity,
+      entityId,
+      label,
+      userEmail: currentUser?.email || '',
+      userName: currentUser?.name || currentUser?.companyName || '',
+      createdAt: new Date().toISOString()
+    };
+    setAuditLogs((prev) => [entry, ...prev].slice(0, 500));
+  };
+
+  const softDelete = (setter, items, entity, id, labelFallback) => {
+    const item = items.find((entry) => entry.id === id);
+    setter((prev) => prev.map((entry) => entry.id === id ? {
+      ...entry,
+      deletedAt: new Date().toISOString(),
+      deletedBy: currentUser?.email || currentUser?.id || 'usuario'
+    } : entry));
+    registerAudit('soft_delete', entity, id, labelFallback(item));
+  };
+
   // Aplica o tema ao body
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
@@ -308,7 +341,8 @@ export const DataProvider = ({ children, currentUser }) => {
     privacidade,
     servicos,
     theme,
-    userProfile
+    userProfile,
+    auditLogs
   });
 
   useEffect(() => {
@@ -358,41 +392,48 @@ export const DataProvider = ({ children, currentUser }) => {
     localStorage.setItem(scopedKey('financeiro'), JSON.stringify(financeiro));
     localStorage.setItem(scopedKey('privacidade'), JSON.stringify(privacidade));
     localStorage.setItem(scopedKey('user'), JSON.stringify(userProfile));
+    localStorage.setItem(scopedKey('auditLogs'), JSON.stringify(auditLogs));
 
     if (!cloudDataRef || !cloudLoadedRef.current) return;
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       setDoc(cloudDataRef, { ...buildCloudData(), updatedAt: serverTimestamp() }, { merge: true }).catch(() => undefined);
     }, 700);
-  }, [servicos, clientes, agendamentos, estoque, financeiro, privacidade, userProfile, cloudDataRef]);
+  }, [servicos, clientes, agendamentos, estoque, financeiro, privacidade, userProfile, auditLogs, cloudDataRef]);
 
   const addCliente = (cliente) => {
-    setClientes(prev => [...prev, { ...cliente, id: Date.now() }]);
+    const id = Date.now();
+    setClientes(prev => [...prev, { ...cliente, id }]);
+    registerAudit('create', 'cliente', id, cliente?.nome || cliente?.name || 'Cliente');
   };
 
   const updateCliente = (id, updatedData) => {
     setClientes(prev => prev.map(c => c.id === id ? { ...c, ...updatedData } : c));
+    registerAudit('update', 'cliente', id, updatedData?.nome || updatedData?.name || 'Cliente');
   };
 
   const deleteCliente = (id) => {
-    setClientes(prev => prev.filter(c => c.id !== id));
+    softDelete(setClientes, clientes, 'cliente', id, (item) => item?.nome || item?.name || 'Cliente');
   };
 
   const addAgendamento = (agendamento) => {
     const nextOS = userProfile.osCounter || 1;
+    const id = Date.now();
     setAgendamentos(prev => [...prev, { 
       ...agendamento, 
-      id: Date.now(), 
+      id, 
       osNumber: nextOS,
       pagoSinal: agendamento.pagoSinal || false,
       lembrete24h: false,
       lembrete2h: false
     }]);
     setUserProfile(prev => ({ ...prev, osCounter: nextOS + 1 }));
+    registerAudit('create', 'agendamento', id, agendamento?.cliente || 'Agendamento');
   };
 
   const updateAgendamento = (id, updatedData) => {
     setAgendamentos(prev => prev.map(a => a.id === id ? { ...a, ...updatedData } : a));
+    registerAudit('update', 'agendamento', id, updatedData?.cliente || 'Agendamento');
   };
 
   const updateAgendamentoStatus = (id, status) => {
@@ -404,31 +445,37 @@ export const DataProvider = ({ children, currentUser }) => {
   };
 
   const deleteAgendamento = (id) => {
-    setAgendamentos(prev => prev.filter(a => a.id !== id));
+    softDelete(setAgendamentos, agendamentos, 'agendamento', id, (item) => item?.cliente || 'Agendamento');
   };
 
   const addServico = (servico) => {
-    setServicos(prev => [...prev, { ...servico, id: Date.now() }]);
+    const id = Date.now();
+    setServicos(prev => [...prev, { ...servico, id }]);
+    registerAudit('create', 'servico', id, servico?.nome || 'Servico');
   };
 
   const updateServico = (id, updatedData) => {
     setServicos(prev => prev.map(s => s.id === id ? { ...s, ...updatedData } : s));
+    registerAudit('update', 'servico', id, updatedData?.nome || 'Servico');
   };
 
   const deleteServico = (id) => {
-    setServicos(prev => prev.filter(s => s.id !== id));
+    softDelete(setServicos, servicos, 'servico', id, (item) => item?.nome || 'Servico');
   };
 
   const addProduto = (produto) => {
-    setEstoque(prev => [...prev, { ...produto, id: Date.now() }]);
+    const id = Date.now();
+    setEstoque(prev => [...prev, { ...produto, id }]);
+    registerAudit('create', 'estoque', id, produto?.nome || 'Produto');
   };
 
   const updateProduto = (id, updatedData) => {
     setEstoque(prev => prev.map(p => p.id === id ? { ...p, ...updatedData } : p));
+    registerAudit('update', 'estoque', id, updatedData?.nome || 'Produto');
   };
 
   const deleteProduto = (id) => {
-    setEstoque(prev => prev.filter(p => p.id !== id));
+    softDelete(setEstoque, estoque, 'estoque', id, (item) => item?.nome || 'Produto');
   };
 
   const movimentarEstoque = (id, quantidade, tipo) => {
@@ -450,15 +497,18 @@ export const DataProvider = ({ children, currentUser }) => {
   };
 
   const addLancamento = (lancamento) => {
-    setFinanceiro(prev => [...prev, { ...lancamento, id: Date.now() }]);
+    const id = Date.now();
+    setFinanceiro(prev => [...prev, { ...lancamento, id }]);
+    registerAudit('create', 'financeiro', id, lancamento?.descricao || lancamento?.categoria || 'Lancamento');
   };
 
   const updateLancamento = (id, updatedData) => {
     setFinanceiro(prev => prev.map(l => l.id === id ? { ...l, ...updatedData } : l));
+    registerAudit('update', 'financeiro', id, updatedData?.descricao || updatedData?.categoria || 'Lancamento');
   };
 
   const deleteLancamento = (id) => {
-    setFinanceiro(prev => prev.filter(l => l.id !== id));
+    softDelete(setFinanceiro, financeiro, 'financeiro', id, (item) => item?.descricao || item?.categoria || 'Lancamento');
   };
 
   const exportData = () => {
@@ -467,7 +517,8 @@ export const DataProvider = ({ children, currentUser }) => {
       clientes,
       agendamentos,
       estoque,
-      financeiro
+      financeiro,
+      auditLogs
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -496,6 +547,7 @@ export const DataProvider = ({ children, currentUser }) => {
       if (agendamentosBackup) setAgendamentos(agendamentosBackup);
       if (estoqueBackup) setEstoque(estoqueBackup);
       if (financeiroBackup) setFinanceiro(financeiroBackup);
+      if (Array.isArray(jsonData.auditLogs)) setAuditLogs(jsonData.auditLogs);
       alert('Dados restaurados com sucesso!');
       window.location.reload();
     } catch (e) {
@@ -505,15 +557,15 @@ export const DataProvider = ({ children, currentUser }) => {
   };
   return (
     <DataContext.Provider value={{
-      clientes, addCliente, updateCliente, deleteCliente,
-      agendamentos, addAgendamento, updateAgendamento, updateAgendamentoStatus, deleteAgendamento,
-      servicos, addServico, updateServico, deleteServico,
-      estoque, addProduto, updateProduto, deleteProduto, movimentarEstoque,
-      financeiro, addLancamento, updateLancamento, deleteLancamento,
+      clientes: visibleClientes, addCliente, updateCliente, deleteCliente,
+      agendamentos: visibleAgendamentos, addAgendamento, updateAgendamento, updateAgendamentoStatus, deleteAgendamento,
+      servicos: visibleServicos, addServico, updateServico, deleteServico,
+      estoque: visibleEstoque, addProduto, updateProduto, deleteProduto, movimentarEstoque,
+      financeiro: visibleFinanceiro, addLancamento, updateLancamento, deleteLancamento,
       privacidade, setPrivacidade,
       theme, setTheme,
       userProfile, setUserProfile,
-      exportData, importData,
+      auditLogs, exportData, importData,
       updateLembreteStatus
     }}>
       {children}
