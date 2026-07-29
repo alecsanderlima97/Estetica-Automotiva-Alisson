@@ -38,6 +38,9 @@ function App() {
       if (userData) {
         setUser(userData);
         localStorage.setItem('currentUser', JSON.stringify(userData));
+      } else {
+        setUser(null);
+        localStorage.removeItem('currentUser');
       }
       setAuthChecked(true);
     });

@@ -87,7 +87,7 @@ function currentMonthKey(date = new Date()) {
 export function getTenantBillingState(tenant, now = new Date()) {
   const status = tenant?.subscriptionStatus || "trial";
   const pastDueDays = daysPastDue(tenant?.nextBillingDate, now);
-  const autoBlocked = ["ativo", "vencido"].includes(status) && pastDueDays >= 5;
+  const autoBlocked = ["trial", "ativo", "vencido"].includes(status) && pastDueDays >= 5;
   const blocked = status === "bloqueado" || status === "cancelado" || autoBlocked;
   const effectiveStatus = autoBlocked ? "bloqueado" : pastDueDays > 0 && status === "ativo" ? "vencido" : status;
   const daysUntilBlock = pastDueDays > 0 && pastDueDays < 5 ? 5 - pastDueDays : 0;
@@ -107,7 +107,7 @@ export function getSubscriptionAccess(user) {
   const status = user?.subscriptionStatus || "trial";
   const pastDueDays = daysPastDue(user?.nextBillingDate);
   const dueInDays = daysUntilDue(user?.nextBillingDate);
-  const autoBlocked = ["ativo", "vencido"].includes(status) && pastDueDays >= 5;
+  const autoBlocked = ["trial", "ativo", "vencido"].includes(status) && pastDueDays >= 5;
   const blocked = status === "bloqueado" || status === "cancelado" || autoBlocked;
 
   return {
@@ -261,13 +261,22 @@ export async function loadUserMembership(userId) {
   const membership = first.data();
   const tenantSnapshot = await getDoc(doc(db, tenantPath(tenantId)));
   const tenant = tenantSnapshot.exists() ? tenantSnapshot.data() : {};
+  const billing = getTenantBillingState(tenant);
+
+  if (billing.autoBlocked && tenant.subscriptionStatus !== "bloqueado") {
+    updateDoc(doc(db, tenantPath(tenantId)), {
+      subscriptionStatus: "bloqueado",
+      updatedAt: serverTimestamp()
+    }).catch(() => undefined);
+  }
+
   return {
     id: userId,
     tenantId,
     companyName: tenant.name || membership.companyName || "Empresa",
     role: membership.role || "Consulta",
     planId: tenant.planId || membership.planId || "medium",
-    subscriptionStatus: tenant.subscriptionStatus || membership.subscriptionStatus || "trial",
+    subscriptionStatus: billing.effectiveStatus || tenant.subscriptionStatus || membership.subscriptionStatus || "trial",
     nextBillingDate: tenant.nextBillingDate || ""
   };
 }
