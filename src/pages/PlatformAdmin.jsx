@@ -199,10 +199,12 @@ const PlatformAdmin = () => {
 
         <div style={{ borderBottom: "1px solid #f1f5f9", padding: 20 }}>
           <h2 style={{ margin: 0, fontSize: 14, fontWeight: 900 }}>Novo convite comercial</h2>
-          <p style={{ margin: "6px 0 14px", color: "#475569", fontSize: 13 }}>Use este convite para a cliente criar a propria empresa com o plano liberado por voce.</p>
+          <p style={{ margin: "6px 0 14px", color: "#475569", fontSize: 13 }}>
+            Use este convite para o cliente criar a propria empresa. O Plano Medio ja fica selecionado como padrao comercial.
+          </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 12 }}>
             <select style={inputStyle} value={planId} onChange={(event) => setPlanId(event.target.value)}>
-              {Object.entries(PLANS).map(([id, plan]) => <option key={id} value={id}>{plan.label} - {plan.monthlyPrice}</option>)}
+              {Object.entries(PLANS).map(([id, plan]) => <option key={id} value={id}>{plan.label} - {plan.monthlyPrice}{plan.recommended ? " - recomendado" : ""}</option>)}
             </select>
             <select style={inputStyle} value={status} onChange={(event) => setStatus(event.target.value)}>
               {SUBSCRIPTION_STATUSES.map((item) => <option key={item}>{item}</option>)}

@@ -99,13 +99,29 @@ const Plans = () => {
       </section>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 18 }}>
-        {Object.entries(PLANS).map(([id, plan]) => (
-          <article key={id} style={{ ...cardStyle, borderColor: currentUser?.planId === id ? 'var(--primary-color)' : 'rgba(255,255,255,0.08)' }}>
+        {Object.entries(PLANS).map(([id, plan]) => {
+          const active = currentUser?.planId === id;
+          const featured = plan.recommended;
+
+          return (
+          <article key={id} style={{
+            ...cardStyle,
+            position: 'relative',
+            borderColor: active || featured ? 'var(--primary-color)' : 'rgba(255,255,255,0.08)',
+            background: featured ? 'linear-gradient(180deg, rgba(var(--primary-rgb),0.14), rgba(255,255,255,0.03))' : cardStyle.background,
+            boxShadow: featured ? '0 18px 45px rgba(0,0,0,0.22)' : 'none'
+          }}>
+            {featured ? (
+              <span style={{ position: 'absolute', top: 14, right: 14, padding: '6px 10px', borderRadius: 999, background: 'var(--primary-color)', color: '#111827', fontSize: 11, fontWeight: 900 }}>
+                Mais vendido
+              </span>
+            ) : null}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-              <h3 style={{ margin: 0, fontSize: 22 }}>{plan.label}</h3>
+              <h3 style={{ margin: 0, fontSize: 22, paddingRight: featured ? 92 : 0 }}>{plan.label}</h3>
               {id === 'premium' ? <Crown color="#facc15" size={22} /> : <Users color="var(--primary-color)" size={22} />}
             </div>
             <strong style={{ display: 'block', fontSize: 26, marginTop: 12 }}>{plan.monthlyPrice}</strong>
+            {featured ? <p style={{ color: '#d9f99d', margin: '8px 0 0', fontSize: 13 }}>Plano recomendado para a maioria das esteticas automotivas.</p> : null}
             <div style={{ marginTop: 16, display: 'grid', gap: 8, color: '#ccc', fontSize: 14 }}>
               <span>Usuarios: {plan.limits.users}</span>
               <span>Clientes/veiculos: {plan.limits.vehicles}</span>
@@ -120,7 +136,8 @@ const Plans = () => {
               ))}
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
