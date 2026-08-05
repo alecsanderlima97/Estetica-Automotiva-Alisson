@@ -33,21 +33,21 @@ export const PLANS = {
     label: "Plano Inicial",
     monthlyPrice: "R$ 75",
     recommended: false,
-    limits: { users: 1, vehicles: 70, appointments: 150, aiCredits: 0 },
+    limits: { users: 1, vehicles: 65, appointments: 80, serviceOrders: 40, aiCredits: 0 },
     features: ["Agenda", "Clientes e veiculos", "Catalogo de servicos"]
   },
   medium: {
     label: "Plano Medio",
     monthlyPrice: "R$ 120",
     recommended: true,
-    limits: { users: 3, vehicles: 300, appointments: 350, aiCredits: 15 },
+    limits: { users: 3, vehicles: 200, appointments: 180, serviceOrders: 120, aiCredits: 15 },
     features: ["Tudo do Starter", "Financeiro completo", "Estoque", "Convites internos", "Prioridade no suporte", "Assistente IA inicial"]
   },
   premium: {
     label: "Plano Premium",
     monthlyPrice: "R$ 299",
     recommended: false,
-    limits: { users: 8, vehicles: 500, appointments: 800, aiCredits: 100 },
+    limits: { users: 6, vehicles: 500, appointments: 350, serviceOrders: 300, aiCredits: 50 },
     features: ["Tudo do Medium", "Multiunidade", "Prioridade no suporte", "Assistente IA avancado"]
   }
 };

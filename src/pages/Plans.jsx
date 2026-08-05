@@ -126,6 +126,7 @@ const Plans = () => {
               <span>Usuarios: {plan.limits.users}</span>
               <span>Clientes/veiculos: {plan.limits.vehicles}</span>
               <span>Agendamentos/mes: {plan.limits.appointments}</span>
+              <span>Ordens de servico/mes: {plan.limits.serviceOrders}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Bot size={15} /> IA: {plan.limits.aiCredits} creditos/mes</span>
             </div>
             <div style={{ marginTop: 18, display: 'grid', gap: 9 }}>
