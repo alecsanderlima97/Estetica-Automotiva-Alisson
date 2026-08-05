@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Bot, CalendarClock, Car, CheckCircle, Crown, Lock, Users } from 'lucide-react';
+import { AlertTriangle, Bot, CalendarClock, Car, CheckCircle, Crown, FileText, Lock, Users } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { PLANS, getSubscriptionAccess, getTenantAiUsage } from '../services/commercialService';
 
@@ -31,6 +31,16 @@ const Plans = () => {
     }).length;
   }, [agendamentos]);
 
+  const monthlyServiceOrders = useMemo(() => {
+    const monthKey = new Date().toISOString().slice(0, 7);
+    return agendamentos.filter((item) => {
+      if (!item?.osGeneratedAt) return false;
+      const parsed = new Date(item.osGeneratedAt);
+      if (Number.isNaN(parsed.getTime())) return false;
+      return parsed.toISOString().slice(0, 7) === monthKey;
+    }).length;
+  }, [agendamentos]);
+
   const usageCards = [
     {
       icon: Car,
@@ -43,6 +53,12 @@ const Plans = () => {
       label: 'Agendamentos do mes',
       used: monthlyAppointments,
       limit: access.plan.limits.appointments
+    },
+    {
+      icon: FileText,
+      label: 'Ordens de servico',
+      used: monthlyServiceOrders,
+      limit: access.plan.limits.serviceOrders
     },
     {
       icon: Bot,

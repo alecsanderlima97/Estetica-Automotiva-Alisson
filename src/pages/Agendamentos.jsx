@@ -17,6 +17,18 @@ const countAppointmentsInMonth = (items, dateStr) => {
   return items.filter((item) => getMonthKeyFromDateStr(item.dataStr) === monthKey).length;
 };
 
+const getMonthKeyFromIso = (value) => {
+  if (!value) return '';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toISOString().slice(0, 7);
+};
+
+const countServiceOrdersInMonth = (items, date = new Date()) => {
+  const monthKey = date.toISOString().slice(0, 7);
+  return items.filter((item) => getMonthKeyFromIso(item.osGeneratedAt) === monthKey).length;
+};
+
 // Componente de Calendário Premium Customizado
 const CalendarModal = ({ isOpen, onClose, onSelectDate, initialDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date(initialDate));
@@ -119,8 +131,11 @@ const Agendamentos = () => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
   const access = getSubscriptionAccess(currentUser);
   const appointmentLimit = access.plan.limits.appointments;
+  const serviceOrderLimit = access.plan.limits.serviceOrders || 0;
   const currentMonthAppointments = countAppointmentsInMonth(agendamentos, filtroData);
+  const currentMonthServiceOrders = countServiceOrdersInMonth(agendamentos);
   const reachedAppointmentLimit = currentUser?.role !== 'dev' && appointmentLimit > 0 && currentMonthAppointments >= appointmentLimit;
+  const reachedServiceOrderLimit = currentUser?.role !== 'dev' && serviceOrderLimit > 0 && currentMonthServiceOrders >= serviceOrderLimit;
 
   const formatarValor = (valor) => {
     return `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
@@ -156,6 +171,22 @@ const Agendamentos = () => {
   const setEditando = (agendamento) => {
     setAgendamentoParaEditar(agendamento);
     setIsModalOpen(true);
+  };
+
+  const handleOpenServiceOrder = (agendamento) => {
+    if (agendamento.osGeneratedAt) {
+      setAgendamentoParaImprimir(agendamento);
+      return;
+    }
+
+    if (reachedServiceOrderLimit) {
+      alert(`Limite do ${access.plan.label} atingido: ${serviceOrderLimit} ordens de servico neste mes. Solicite liberacao ou upgrade para continuar gerando OS.`);
+      return;
+    }
+
+    const osGeneratedAt = new Date().toISOString();
+    updateAgendamento(agendamento.id, { osGeneratedAt });
+    setAgendamentoParaImprimir({ ...agendamento, osGeneratedAt });
   };
 
   const getStatusClass = (status) => {
@@ -246,6 +277,13 @@ const Agendamentos = () => {
         <div className="card" style={{ marginBottom: 24, borderColor: 'rgba(245,158,11,.35)', background: 'rgba(245,158,11,.1)', color: '#fde68a', display: 'flex', gap: 10, alignItems: 'center' }}>
           <AlertCircle size={18} />
           Limite do {access.plan.label} atingido: {currentMonthAppointments}/{appointmentLimit} agendamentos neste mes. Solicite liberacao ou upgrade para continuar agendando.
+        </div>
+      ) : null}
+
+      {reachedServiceOrderLimit ? (
+        <div className="card" style={{ marginBottom: 24, borderColor: 'rgba(245,158,11,.35)', background: 'rgba(245,158,11,.1)', color: '#fde68a', display: 'flex', gap: 10, alignItems: 'center' }}>
+          <AlertCircle size={18} />
+          Limite do {access.plan.label} atingido: {currentMonthServiceOrders}/{serviceOrderLimit} ordens de servico neste mes. Solicite liberacao ou upgrade para continuar gerando OS.
         </div>
       ) : null}
 
@@ -427,8 +465,9 @@ const Agendamentos = () => {
 
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button 
-                    onClick={() => setAgendamentoParaImprimir(agendamento)} 
-                    title="Imprimir OS" 
+                    onClick={() => handleOpenServiceOrder(agendamento)} 
+                    disabled={reachedServiceOrderLimit && !agendamento.osGeneratedAt}
+                    title={reachedServiceOrderLimit && !agendamento.osGeneratedAt ? 'Limite mensal de OS atingido' : 'Imprimir OS'} 
                     className="action-btn-circle" 
                     style={{ background: 'rgba(37, 211, 102, 0.1)', color: '#25D366' }}
                   >

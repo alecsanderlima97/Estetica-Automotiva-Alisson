@@ -4,6 +4,7 @@ import {
   ROLES,
   canManageUsers,
   createInternalInvite,
+  getSubscriptionAccess,
   listTenantInvites,
   listTenantUsers,
   updateTenantUserRole
@@ -27,6 +28,8 @@ const inputStyle = {
 const UserPermissions = () => {
   const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
   const canManage = canManageUsers(currentUser?.role) || currentUser?.role === 'dev';
+  const access = getSubscriptionAccess(currentUser);
+  const userLimit = access.plan.limits.users || 0;
   const [users, setUsers] = useState([]);
   const [invites, setInvites] = useState([]);
   const [inviteRole, setInviteRole] = useState('Financeiro');
@@ -58,6 +61,12 @@ const UserPermissions = () => {
 
   const generateInvite = async () => {
     try {
+      const activeInvites = invites.filter((invite) => invite.status === 'Ativo').length;
+      const projectedUsers = users.length + activeInvites + 1;
+      if (currentUser?.role !== 'dev' && userLimit > 0 && projectedUsers > userLimit) {
+        setMessage(`Limite do ${access.plan.label} atingido: ${userLimit} usuario(s). Cancele convites ativos, remova usuarios ou solicite upgrade.`);
+        return;
+      }
       const invite = await createInternalInvite(currentUser.tenantId, currentUser.companyName, inviteRole);
       setInviteCode(invite.code);
       setMessage('Convite interno gerado.');
@@ -109,12 +118,15 @@ const UserPermissions = () => {
           <p style={{ color: '#ccc', fontSize: 14, lineHeight: 1.6 }}>
             Gere um codigo para colaborador criar acesso nesta empresa. O convite expira em 7 dias.
           </p>
+          <p style={{ color: '#aaa', fontSize: 13, margin: '10px 0 0' }}>
+            Uso do plano: {users.length + invites.length}/{userLimit} usuario(s), incluindo convites ativos.
+          </p>
           <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>
             <select value={inviteRole} onChange={(event) => setInviteRole(event.target.value)} style={inputStyle}>
               {ROLES.map((role) => <option key={role}>{role}</option>)}
             </select>
             <p style={{ margin: 0, color: '#aaa', fontSize: 13 }}>{roleDescriptions[inviteRole]}</p>
-            <button className="action-btn" onClick={generateInvite} style={{ justifyContent: 'center' }}>
+            <button className="action-btn" onClick={generateInvite} disabled={currentUser?.role !== 'dev' && userLimit > 0 && users.length + invites.length >= userLimit} style={{ justifyContent: 'center' }}>
               <UserPlus size={18} /> Gerar convite
             </button>
           </div>
