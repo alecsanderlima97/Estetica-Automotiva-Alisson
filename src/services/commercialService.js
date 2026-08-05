@@ -47,7 +47,7 @@ export const PLANS = {
     label: "Plano Premium",
     monthlyPrice: "R$ 299",
     recommended: false,
-    limits: { users: 6, vehicles: 500, appointments: 350, serviceOrders: 300, aiCredits: 50 },
+    limits: { users: 6, vehicles: 500, appointments: 350, serviceOrders: 300, aiCredits: 100 },
     features: ["Tudo do Medium", "Multiunidade", "Prioridade no suporte", "Assistente IA avancado"]
   }
 };
